@@ -1,0 +1,28 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using Mediachase.Commerce.Pricing
+@using CommerceTraining.Controllers
+
+@model CommerceTraining.Models.Catalog.DefaultVariation
+
+<div>
+  @Html.PropertyFor(m => m.MainBody)
+</div>
+
+<div>
+    All Prices
+    <ul>
+        @{
+
+            foreach (IPriceValue item in ((DefaultController)this.ViewContext.Controller).GetThePrices())
+            {
+                <li>@item.CustomerPricing.PriceCode =+= @item.CustomerPricing.PriceTypeId =+= @item.UnitPrice.Amount</li>
+            }
+
+        }
+    </ul>
+</div>
+
+<div>
+    The right price (depending on batch... and inventory)
+</div>
