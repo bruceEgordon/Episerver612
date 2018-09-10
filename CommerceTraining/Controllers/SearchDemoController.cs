@@ -3,13 +3,16 @@ using EPiServer;
 using EPiServer.Core;
 using EPiServer.Globalization;
 using Mediachase.Commerce.Catalog;
+using Mediachase.Commerce.Website.Search;
 using Mediachase.Search;
 using Mediachase.Search.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Serialization;
 
 namespace CommerceTraining.Controllers
 {
@@ -33,7 +36,7 @@ namespace CommerceTraining.Controllers
         {
             var vmodel = new PMSearchResultViewModel();
             vmodel.SearchQueryText = keyWord;
-
+            vmodel.FacetList = new List<string>();
             // Create criteria
             CatalogEntrySearchCriteria criteria = new CatalogEntrySearchCriteria
             {
@@ -43,6 +46,20 @@ namespace CommerceTraining.Controllers
                 SearchPhrase = keyWord
             };
 
+            string _SearchConfigPath =
+            @"C:\Episerver612\CommerceTraining\CommerceTraining\Configs\Mediachase.Search.Filters.config";
+
+            TextReader reader = new StreamReader(_SearchConfigPath);
+            XmlSerializer serializer = new XmlSerializer((typeof(SearchConfig)));
+            var _SearchConfig = (SearchConfig)serializer.Deserialize(reader);
+            reader.Close();
+
+            foreach (SearchFilter filter in _SearchConfig.SearchFilters)
+            {
+                // Step 1 - use the XML file
+                criteria.Add(filter); 
+            }
+
             // use the manager for search and for index management
             SearchManager manager = new SearchManager("ECApplication");
 
@@ -50,15 +67,61 @@ namespace CommerceTraining.Controllers
             ISearchResults results = manager.Search(criteria);
 
             vmodel.SearchResults = results.Documents.ToList();
-            //int[] ints = results.GetKeyFieldValues<int>();
-            ViewBag.resultCount = results.Documents.Count;
-
-            //List<ContentReference> refs = new List<ContentReference>();
-            //ints.ToList().ForEach(i => refs.Add(_referenceConverter.GetContentLink(i, CatalogContentType.CatalogEntry, 0)));
-
-            //vmodel.allContent = _contentLoader.GetItems(refs, new LoaderOptions());
+            vmodel.FacetGroups = results.FacetGroups.ToList();
+            vmodel.ResultCount = results.Documents.Count.ToString();
 
             return View(vmodel);
+        }
+
+        public ActionResult ProviderModelFilteredSearch(string keyWord, string group, string facet)
+        {
+            var vmodel = new PMSearchResultViewModel();
+            vmodel.SearchQueryText = keyWord;
+            
+            CatalogEntrySearchCriteria criteria = new CatalogEntrySearchCriteria
+            { 
+                Locale = ContentLanguage.PreferredCulture.TwoLetterISOLanguageName,
+                SearchPhrase = keyWord
+            };
+
+            string _SearchConfigPath =
+            @"C:\Episerver612\CommerceTraining\CommerceTraining\Configs\Mediachase.Search.Filters.config";
+
+            TextReader reader = new StreamReader(_SearchConfigPath);
+            XmlSerializer serializer = new XmlSerializer((typeof(SearchConfig)));
+            var _SearchConfig = (SearchConfig)serializer.Deserialize(reader);
+            reader.Close();
+
+            foreach (SearchFilter filter in _SearchConfig.SearchFilters)
+            {
+                // Step 1 - use the XML file
+                criteria.Add(filter);
+            }
+
+            foreach (SearchFilter filter in _SearchConfig.SearchFilters)
+            {
+                if(filter.field.ToLower() == group.ToLower())
+                {
+                    var svFilter = filter.Values.SimpleValue.FirstOrDefault(x => x.value.Equals(facet, StringComparison.OrdinalIgnoreCase));
+                    if (svFilter != null)
+                    {
+                        //This overload to Add causes the filter to be applied
+                        criteria.Add(filter.field, svFilter);
+                    }
+                }
+            }
+
+            // use the manager for search and for index management
+            SearchManager manager = new SearchManager("ECApplication");
+
+            // Do search
+            ISearchResults results = manager.Search(criteria);
+
+            vmodel.SearchResults = results.Documents.ToList();
+            vmodel.FacetGroups = results.FacetGroups.ToList();
+            vmodel.ResultCount = results.Documents.Count.ToString();
+
+            return View("ProviderModelQuery", vmodel);
         }
     }
 }

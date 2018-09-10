@@ -8,15 +8,42 @@
 
 <p>You are looking for results for the text: @Model.SearchQueryText</p>
 
-<p>Total number of items in result: @ViewBag.resultCount</p>
+<p>Total number of items in result: @Model.ResultCount</p>
 
-<b>Generic (IContent)</b>
-
+<div>
+    <b>Facet List</b>
+    <ul>
+        @foreach (var group in Model.FacetGroups)
+        {
+            foreach (var facet in group.Facets)
+            {
+                <li>
+                    @Html.ActionLink($"{group.Name} {facet.Name} {facet.Count}",
+                        "ProviderModelFilteredSearch", new { keyWord = Model.SearchQueryText, group = group.Name, facet = facet.Name })
+                </li>
+            }
+        }
+    </ul>
+</div>
+<b>Results</b>
+<table>
+    <thead><tr><th>Name</th><th>Color</th><th>Brand</th></tr></thead>
+    <tbody>
+        @foreach(var item in Model.SearchResults)
+        {
+            <tr>
+                <td>@item["name"].Value</td>
+                <td>@(item["color"] == null ? "NA" : item["color"].Value)</td>
+                <td>@(item["brand"] == null ? "NA" : item["brand"].Value)</td>
+            </tr>
+        }
+    </tbody>
+</table>
 <ul>
     @foreach (var item in Model.SearchResults)
     {
         <li>
-            @item["code"].Value
+            @item["name"].Value
         </li>
     }
 </ul>
