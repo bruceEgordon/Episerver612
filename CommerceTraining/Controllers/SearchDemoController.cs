@@ -2,7 +2,11 @@
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.Globalization;
+using EPiServer.ServiceLocation;
+using Mediachase.Commerce;
 using Mediachase.Commerce.Catalog;
+using Mediachase.Commerce.Catalog.Dto;
+using Mediachase.Commerce.Catalog.Objects;
 using Mediachase.Commerce.Website.Search;
 using Mediachase.Search;
 using Mediachase.Search.Extensions;
@@ -18,14 +22,6 @@ namespace CommerceTraining.Controllers
 {
     public class SearchDemoController : Controller
     {
-        private ReferenceConverter _referenceConverter;
-        private IContentLoader _contentLoader;
-
-        public SearchDemoController(ReferenceConverter referenceConverter, IContentLoader contentLoader)
-        {
-            _referenceConverter = referenceConverter;
-            _contentLoader = contentLoader;
-        }
         // GET: SearchDemo
         public ActionResult Index()
         {
@@ -36,7 +32,7 @@ namespace CommerceTraining.Controllers
         {
             var vmodel = new PMSearchResultViewModel();
             vmodel.SearchQueryText = keyWord;
-            vmodel.FacetList = new List<string>();
+            
             // Create criteria
             CatalogEntrySearchCriteria criteria = new CatalogEntrySearchCriteria
             {
@@ -46,19 +42,41 @@ namespace CommerceTraining.Controllers
                 SearchPhrase = keyWord
             };
 
-            string _SearchConfigPath =
-            @"C:\Episerver612\CommerceTraining\CommerceTraining\Configs\Mediachase.Search.Filters.config";
+            #region Options
+            //criteria.Sort = CatalogEntrySearchCriteria.DefaultSortOrder;
+            //criteria.CatalogNames.Add("Fashion");
 
-            TextReader reader = new StreamReader(_SearchConfigPath);
-            XmlSerializer serializer = new XmlSerializer((typeof(SearchConfig)));
-            var _SearchConfig = (SearchConfig)serializer.Deserialize(reader);
-            reader.Close();
+            //criteria.ClassTypes.Add(EntryType.Variation);
+            //criteria.MarketId = MarketId.Default;
 
-            foreach (SearchFilter filter in _SearchConfig.SearchFilters)
-            {
-                // Step 1 - use the XML file
-                criteria.Add(filter); 
-            }
+            //criteria.IsFuzzySearch = true;
+            //criteria.FuzzyMinSimilarity = 0.7F;
+
+            //criteria.IncludeInactive = true;
+
+            //System.Collections.Specialized.StringCollection sc =
+            //    new System.Collections.Specialized.StringCollection
+            //    {
+            //        "Fashion/Clothes_1/Men_1/Shirts_1",
+            //        "Fashion/Clothes_1/UniSex_1"
+            //    };
+            //criteria.Outlines = sc;
+            #endregion Options
+
+            //string _SearchConfigPath =
+            //@"C:\Episerver612\CommerceTraining\CommerceTraining\Configs\Mediachase.Search.Filters.config";
+
+            //TextReader reader = new StreamReader(_SearchConfigPath);
+            //XmlSerializer serializer = new XmlSerializer((typeof(SearchConfig)));
+            //var _SearchConfig = (SearchConfig)serializer.Deserialize(reader);
+            //reader.Close();
+
+            //foreach (SearchFilter filter in _SearchConfig.SearchFilters)
+            //{
+            //    criteria.Add(filter); 
+            //}
+
+            CreateFacetsByCode(criteria);
 
             // use the manager for search and for index management
             SearchManager manager = new SearchManager("ECApplication");
@@ -84,25 +102,28 @@ namespace CommerceTraining.Controllers
                 SearchPhrase = keyWord
             };
 
-            string _SearchConfigPath =
-            @"C:\Episerver612\CommerceTraining\CommerceTraining\Configs\Mediachase.Search.Filters.config";
+            //string _SearchConfigPath =
+            //@"C:\Episerver612\CommerceTraining\CommerceTraining\Configs\Mediachase.Search.Filters.config";
 
-            TextReader reader = new StreamReader(_SearchConfigPath);
-            XmlSerializer serializer = new XmlSerializer((typeof(SearchConfig)));
-            var _SearchConfig = (SearchConfig)serializer.Deserialize(reader);
-            reader.Close();
+            //TextReader reader = new StreamReader(_SearchConfigPath);
+            //XmlSerializer serializer = new XmlSerializer((typeof(SearchConfig)));
+            //var _SearchConfig = (SearchConfig)serializer.Deserialize(reader);
+            //reader.Close();
 
-            foreach (SearchFilter filter in _SearchConfig.SearchFilters)
-            {
-                // Step 1 - use the XML file
-                criteria.Add(filter);
-            }
+            //foreach (SearchFilter filter in _SearchConfig.SearchFilters)
+            //{
+            //    // Step 1 - use the XML file
+            //    criteria.Add(filter);
+            //}
 
-            foreach (SearchFilter filter in _SearchConfig.SearchFilters)
+            CreateFacetsByCode(criteria);
+            
+            foreach (SearchFilter filter in criteria.Filters)
             {
                 if(filter.field.ToLower() == group.ToLower())
                 {
-                    var svFilter = filter.Values.SimpleValue.FirstOrDefault(x => x.value.Equals(facet, StringComparison.OrdinalIgnoreCase));
+                    var svFilter = filter.Values.SimpleValue
+                        .FirstOrDefault(x => x.value.Equals(facet, StringComparison.OrdinalIgnoreCase));
                     if (svFilter != null)
                     {
                         //This overload to Add causes the filter to be applied
@@ -122,6 +143,141 @@ namespace CommerceTraining.Controllers
             vmodel.ResultCount = results.Documents.Count.ToString();
 
             return View("ProviderModelQuery", vmodel);
+        }
+
+        private void CreateFacetsByCode(CatalogEntrySearchCriteria criteria)
+        {
+            #region Simple Values to be added to filters
+            SimpleValue svWhite = new SimpleValue
+            {
+                value = "white",
+                key = "white",
+                locale = "en",
+                Descriptions = new Descriptions
+                {
+                    defaultLocale = "en",
+                    Description = new Description[]
+                    {
+                        new Description { locale = "en", Value = "White" }
+                    }
+                }
+            };
+
+            SimpleValue svBlue = new SimpleValue
+            {
+                value = "blue",
+                key = "blue",
+                locale = "en",
+                Descriptions = new Descriptions
+                {
+                    defaultLocale = "en",
+                    Description = new Description[]
+                    {
+                        new Description { locale = "en", Value = "Blue" }
+                    }
+                }
+            };
+
+            SimpleValue svRed = new SimpleValue
+            {
+                value = "red",
+                key = "red",
+                locale = "en",
+                Descriptions = new Descriptions
+                {
+                    defaultLocale = "en",
+                    Description = new Description[]
+                    {
+                        new Description { locale = "en", Value = "Red" }
+                    }
+                }
+            };
+
+            SimpleValue svVolvo = new SimpleValue
+            {
+                value = "volvo",
+                key = "volvo",
+                locale = "en",
+                Descriptions = new Descriptions
+                {
+                    defaultLocale = "en",
+                    Description = new Description[]
+                    {
+                        new Description { locale = "en", Value = "Volvo" }
+                    }
+                }
+            };
+
+            SimpleValue svSaab = new SimpleValue
+            {
+                value = "saab",
+                key = "saab",
+                locale = "en",
+                Descriptions = new Descriptions
+                {
+                    defaultLocale = "en",
+                    Description = new Description[]
+                    {
+                        new Description { locale = "en", Value = "Saab" }
+                    }
+                }
+            };
+            #endregion
+
+            #region Search Filters
+            var _langResolver = ServiceLocator.Current.GetInstance<LanguageResolver>();
+
+            SearchFilter searchFilterColor = new SearchFilter
+            {
+                field = "color",
+
+                // mandatory 
+                Descriptions = new Descriptions
+                {
+                    defaultLocale = _langResolver.GetPreferredCulture().Name,
+                    Description = new Description[]
+                    {
+                        new Description { locale = "en", Value = "Color" }
+                    }
+                },
+
+                Values = new SearchFilterValues
+                {
+                    SimpleValue = new SimpleValue[]
+                    {
+                        svWhite,
+                        svBlue,
+                        svRed
+                    }
+                }
+            };
+
+            SearchFilter searchFilterBrand = new SearchFilter
+            {
+                field = "brand",
+
+                Descriptions = new Descriptions
+                {
+                    defaultLocale = _langResolver.GetPreferredCulture().Name,
+                    Description = new Description[]
+                    {
+                        new Description { locale = "en", Value = "Brand" }
+                    }
+                },
+
+                Values = new SearchFilterValues
+                {
+                    SimpleValue = new SimpleValue[]
+                    {
+                        svSaab,
+                        svVolvo
+                    }
+                }
+            };
+            #endregion
+
+            criteria.Add(searchFilterColor);
+            criteria.Add(searchFilterBrand);
         }
     }
 }
