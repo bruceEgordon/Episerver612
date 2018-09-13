@@ -26,24 +26,20 @@
     </ul>
 </div>
 <b>Results</b>
-<table>
-    <thead><tr><th>Name</th><th>Color</th><th>Brand</th></tr></thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th><th scope="col">Color</th><th scope="col">Brand</th>
+        </tr>
+    </thead>
     <tbody>
         @foreach(var item in Model.SearchResults)
         {
             <tr>
-                <td>@item["name"].Value</td>
-                <td>@(item["color"] == null ? "NA" : item["color"].Value)</td>
-                <td>@(item["brand"] == null ? "NA" : item["brand"].Value)</td>
+                <th scope="row">@item["name"].Value</th>
+                <td>@(item["color"] == null ? "N/A" : String.Join(", ", item["color"].Values))</td>
+                <td>@(item["brand"] == null ? "N/A" : item["brand"].Value)</td>
             </tr>
         }
     </tbody>
 </table>
-<ul>
-    @foreach (var item in Model.SearchResults)
-    {
-        <li>
-            @item["name"].Value
-        </li>
-    }
-</ul>
