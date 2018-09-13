@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Find Demo Search Page</h2>
+
+<div>
+    @using (Html.BeginForm("FindQueryIntegrated", "FindSearchDemo", FormMethod.Post))
+    {
+    <div class="form-search">
+        <input type="text" name="keyWord" />
+        <input type="submit" value="Go" />
+    </div>
+    }
+</div>

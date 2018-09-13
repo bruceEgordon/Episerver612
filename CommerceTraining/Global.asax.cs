@@ -18,6 +18,7 @@ namespace CommerceTraining
             base.RegisterRoutes(routes);
 
             routes.MapRoute("SearchDemoRoute", "searchdemo/{action}", new { controller = "SearchDemo", action = "Index" });
+            routes.MapRoute("FindDemoRoute", "findsearchdemo/{action}", new { controller = "FindSearchDemo", action = "Index" });
         }
     }
 }
