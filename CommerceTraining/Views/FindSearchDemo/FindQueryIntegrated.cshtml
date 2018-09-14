@@ -17,15 +17,17 @@
             <th scope="col">Name</th>
             <th scope="col">Margin</th>
             <th scope="col">Brand</th>
+            <th scope="col">Color</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.ShirtVariants)
         {
             <tr>
-                <th scope="row">@item.Name</th>
+                <th scope="row">@Html.ContentLink(item.ContentLink)</th>
                 <td>@item.Margin</td>
                 <td>@item.Brand</td>
+                <td>@item.Color</td>
             </tr>
         }
     </tbody>

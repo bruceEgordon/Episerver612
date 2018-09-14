@@ -27,10 +27,10 @@ namespace CommerceTraining.Controllers
             };
 
             IClient client = SearchClient.Instance;
+            
 
             var result = client.Search<ShirtVariation>()
-              .For(keyWord)
-              .Filter(x => x.Margin.InRange(20, 40))
+              .For(keyWord).FilterOnLanguages(new string[] { "en" })
               .TermsFacetFor(x => x.Brand)
               .TermsFacetFor(x => x.Size)
               .GetContentResult();
