@@ -510,6 +510,7 @@
     <Compile Include="Models\ViewModels\PageViewModel.cs" />
     <Compile Include="Models\ViewModels\PMSearchResultViewModel.cs" />
     <Compile Include="Models\ViewModels\ProductBlockViewModel.cs" />
+    <Compile Include="Models\ViewModels\ProjectedShirtViewModel.cs" />
     <Compile Include="Models\ViewModels\RelatedStuffBlockViewModel.cs" />
     <Compile Include="Models\ViewModels\SearchPageViewModel.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
@@ -620,6 +621,7 @@
     <Content Include="Views\SearchDemo\ProviderModelQuery.cshtml" />
     <Content Include="Views\FindSearchDemo\Index.cshtml" />
     <Content Include="Views\FindSearchDemo\FindQueryIntegrated.cshtml" />
+    <Content Include="Views\FindSearchDemo\ProjectionResult.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

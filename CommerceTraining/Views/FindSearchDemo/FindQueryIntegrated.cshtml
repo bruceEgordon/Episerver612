@@ -10,6 +10,17 @@
 
 <p>Total number of items in result: @Model.ResultCount</p>
 
+<b>Facet List</b>
+<ul>
+        @foreach (var facet in Model.ColorFacets)
+        {
+            <li>
+                @Html.ActionLink($"Color: {facet.Term} {facet.Count}",
+                    "FacetFilteredSearch", new { keyWord = Model.SearchText, facet = facet.Term })
+            </li>
+        }
+</ul>
+
 <b>Results</b>
 <table class="table">
     <thead>

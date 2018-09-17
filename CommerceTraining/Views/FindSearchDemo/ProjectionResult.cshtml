@@ -1,0 +1,28 @@
+﻿@model CommerceTraining.Models.ViewModels.ProjectedShirtViewModel
+
+@{
+    ViewBag.Title = "ProjectionResult";
+}
+
+<h2>Projection Results</h2>
+
+<b>Results</b>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Color</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Shirts)
+        {
+            <tr>
+                <th scope="row">@Html.ContentLink(item.UrlLink)</th>
+                <td>@item.Brand</td>
+                <td>@item.Color</td>
+            </tr>
+        }
+    </tbody>
+</table>

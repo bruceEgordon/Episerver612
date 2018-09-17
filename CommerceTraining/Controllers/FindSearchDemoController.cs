@@ -27,18 +27,74 @@ namespace CommerceTraining.Controllers
             };
 
             IClient client = SearchClient.Instance;
-            
+
 
             var result = client.Search<ShirtVariation>()
-              .For(keyWord).FilterOnLanguages(new string[] { "en" })
-              .TermsFacetFor(x => x.Brand)
-              .TermsFacetFor(x => x.Size)
-              .GetContentResult();
+                .For(keyWord)
+                .Take(50)
+                .FilterOnLanguages(new string[] { "en" })
+                .TermsFacetFor(x => x.Color)
+                .GetContentResult();
 
-            viewModel.ResultCount = result.Items.Count().ToString();
+            viewModel.ColorFacets = result.TermsFacetFor(x => x.Color).Terms.ToList();
+
+            viewModel.ResultCount = result.TotalMatching.ToString();
             viewModel.ShirtVariants = result.ToList();
+
+            return View(viewModel);
+        }
+
+        public ActionResult FacetFilteredSearch(string keyWord, string facet)
+        {
+            var viewModel = new FindResultViewModel
+            {
+                SearchText = keyWord
+            };
+
+            IClient client = SearchClient.Instance;
+
+            var result = client.Search<ShirtVariation>()
+                .For(keyWord)
+                .Filter(x => x.Color.Match(facet))
+                .Take(50)
+                .FilterOnLanguages(new string[] { "en" })
+                .TermsFacetFor(x => x.Color)
+                .GetContentResult();
+
+            viewModel.ColorFacets = result.TermsFacetFor(x => x.Color).Terms.ToList();
+
+            viewModel.ResultCount = result.TotalMatching.ToString();
+            viewModel.ShirtVariants = result.ToList();
+
+            return View("FindQueryIntegrated", viewModel);
+        }
+
+        public ActionResult ProjectionResult(string keyWord)
+        {
+            var viewModel = new ProjectedShirtViewModel()
+            {
+                SearchText = keyWord
+            };
+
+            IClient client = SearchClient.Instance;
+
+            var result = client.Search<ShirtVariation>()
+                .For(keyWord)
+                .Take(50)
+                .FilterOnLanguages(new string[] { "en" })
+                .Select(x => new ProjectedShirt
+                {
+                    Name = x.Name,
+                    Color = x.Color,
+                    Brand = x.Brand,
+                    UrlLink = x.ContentLink
+                })
+                .GetResult();
+
+            viewModel.Shirts = result.ToList();
 
             return View(viewModel);
         }
     }
 }
+//
