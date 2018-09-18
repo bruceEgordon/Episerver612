@@ -1,4 +1,5 @@
-﻿@model CommerceTraining.Models.ViewModels.FindResultViewModel
+﻿@using EPiServer.Find.Commerce
+@model CommerceTraining.Models.ViewModels.FindResultViewModel
 
 @{
     ViewBag.Title = "FindQueryIntegrated";
@@ -29,6 +30,7 @@
             <th scope="col">Margin</th>
             <th scope="col">Brand</th>
             <th scope="col">Color</th>
+            <th scope="col">Default Price</th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +41,10 @@
                 <td>@item.Margin</td>
                 <td>@item.Brand</td>
                 <td>@item.Color</td>
+                <td>
+                    @(item.DefaultPrice() == null ? "No default price" :
+                        item.DefaultPrice().UnitPrice.ToString())
+                </td>
             </tr>
         }
     </tbody>

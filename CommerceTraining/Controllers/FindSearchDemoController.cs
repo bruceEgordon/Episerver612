@@ -1,8 +1,11 @@
 ﻿using CommerceTraining.Models.Catalog;
 using CommerceTraining.Models.ViewModels;
+using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Find;
 using EPiServer.Find.Cms;
+using EPiServer.Find.Commerce;
 using EPiServer.Find.Framework;
+using Mediachase.Commerce;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +34,7 @@ namespace CommerceTraining.Controllers
 
             var result = client.Search<ShirtVariation>()
                 .For(keyWord)
+                //.Filter(x => x.InStockQuantityLessThan(100))
                 .Take(50)
                 .FilterOnLanguages(new string[] { "en" })
                 .TermsFacetFor(x => x.Color)
@@ -92,6 +96,8 @@ namespace CommerceTraining.Controllers
                 .GetResult();
 
             viewModel.Shirts = result.ToList();
+
+            viewModel.ResultCount = result.TotalMatching.ToString();
 
             return View(viewModel);
         }

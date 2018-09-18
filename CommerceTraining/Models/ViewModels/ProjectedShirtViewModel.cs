@@ -18,7 +18,6 @@ namespace CommerceTraining.Models.ViewModels
         public string Name { get; set; }
         public string Color { get; set; }
         public string Brand { get; set; }
-        public string Price { get; set; }
         public ContentReference UrlLink { get; set; }
     }
 }
