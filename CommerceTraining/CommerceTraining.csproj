@@ -417,6 +417,7 @@
     <Compile Include="Controllers\FindUnifiedController.cs" />
     <Compile Include="Controllers\CatalogControllerBase.cs" />
     <Compile Include="Controllers\HashTable.cs" />
+    <Compile Include="Controllers\MarketsDemoController.cs" />
     <Compile Include="Controllers\MyPackageController.cs" />
     <Compile Include="Controllers\NodeController.cs" />
     <Compile Include="Controllers\NodeListingBlockController.cs" />
@@ -438,6 +439,8 @@
     <Compile Include="Infrastructure\CartAndCheckout\CustomLineItemCalculator.cs" />
     <Compile Include="Infrastructure\CartAndCheckout\CustomTaxCalculator.cs" />
     <Compile Include="Infrastructure\CartAndCheckout\NewOrderEvents.cs" />
+    <Compile Include="Infrastructure\DemoCurrentMarket.cs" />
+    <Compile Include="Infrastructure\DemoCurrentMarketRegistration.cs" />
     <Compile Include="Infrastructure\EPiServerCommerceInitializationModule.cs" />
     <Compile Include="Infrastructure\EventReciever.cs" />
     <Compile Include="Infrastructure\FindCatalogConventions.cs" />
@@ -502,6 +505,7 @@
     <Compile Include="Models\ViewModels\CartViewModel.cs" />
     <Compile Include="Models\ViewModels\CatalogViewModel.cs" />
     <Compile Include="Models\ViewModels\CheckOutViewModel.cs" />
+    <Compile Include="Models\ViewModels\DemoMarketsViewModel.cs" />
     <Compile Include="Models\ViewModels\FindResultViewModel.cs" />
     <Compile Include="Models\ViewModels\FindUnifiedViewModel.cs" />
     <Compile Include="Models\ViewModels\LowLevelNodesViewModel.cs" />
@@ -622,6 +626,7 @@
     <Content Include="Views\FindSearchDemo\Index.cshtml" />
     <Content Include="Views\FindSearchDemo\FindQueryIntegrated.cshtml" />
     <Content Include="Views\FindSearchDemo\ProjectionResult.cshtml" />
+    <Content Include="Views\MarketsDemo\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

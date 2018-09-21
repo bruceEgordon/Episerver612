@@ -200,7 +200,7 @@ namespace CommerceTraining.Infrastructure
             DependencyResolver.SetResolver(new StructureMapDependencyResolver(context.StructureMap()));
 
             // newer
-            context.Services.AddTransient<ICurrentMarket, MyCustomCurrentMarket>();
+            //context.Services.AddTransient<ICurrentMarket, MyCustomCurrentMarket>();
 
             context.Services.AddSingleton<IPriceOptimizer, CustomPriceOptimizer>();
 

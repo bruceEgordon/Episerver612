@@ -1,0 +1,14 @@
+﻿@model CommerceTraining.Models.ViewModels.DemoMarketsViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Default Markets Demo</h2>
+<p>Current Market Selected: @Model.SelectedMarket.MarketName</p>
+
+@using (Html.BeginForm("ChangeDefaultMarket", "MarketsDemo"))
+{
+    @Html.DropDownListFor(m => m.SelectedMarket, new SelectList(Model.MarketList, "MarketId.Value", "MarketName"), new { @onchange = "this.form.submit();"})
+}
+
