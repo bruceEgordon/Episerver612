@@ -1,4 +1,5 @@
-﻿@model CommerceTraining.Models.ViewModels.DemoMarketsViewModel
+﻿@using EPiServer.Commerce.Catalog.ContentTypes
+@model CommerceTraining.Models.ViewModels.DemoMarketsViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -9,6 +10,11 @@
 
 @using (Html.BeginForm("ChangeDefaultMarket", "MarketsDemo"))
 {
-    @Html.DropDownListFor(m => m.SelectedMarket, new SelectList(Model.MarketList, "MarketId.Value", "MarketName"), new { @onchange = "this.form.submit();"})
+    @Html.DropDownListFor(m => m.SelectedMarket,
+    new SelectList(Model.MarketList, "MarketId", "MarketName"), "-Please select a Market-",
+    new { @onchange = "this.form.submit();"})
 }
 
+<h4>Shirt Details</h4>
+@Html.PropertyFor(m => m.Shirt.Name)
+@Model.Shirt.GetDefaultPrice().UnitPrice.ToString()

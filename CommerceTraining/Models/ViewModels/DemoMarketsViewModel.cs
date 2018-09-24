@@ -1,4 +1,5 @@
-﻿using Mediachase.Commerce;
+﻿using CommerceTraining.Models.Catalog;
+using Mediachase.Commerce;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace CommerceTraining.Models.ViewModels
     {
         public IMarket SelectedMarket { get; set; }
         public IEnumerable<IMarket> MarketList { get; set; }
+        public ShirtVariation Shirt { get; set; }
     }
 }
