@@ -204,7 +204,7 @@ namespace CommerceTraining.Infrastructure
 
             context.Services.AddSingleton<IPriceOptimizer, CustomPriceOptimizer>();
 
-            context.Services.AddSingleton<ITaxCalculator, CustomTaxCalculator>();
+            //context.Services.AddSingleton<ITaxCalculator, CustomTaxCalculator>();
 
             context.Services.AddSingleton<IPriceService, MyPriceService>();
 

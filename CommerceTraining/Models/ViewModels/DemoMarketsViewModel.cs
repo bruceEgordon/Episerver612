@@ -12,5 +12,6 @@ namespace CommerceTraining.Models.ViewModels
         public IMarket SelectedMarket { get; set; }
         public IEnumerable<IMarket> MarketList { get; set; }
         public ShirtVariation Shirt { get; set; }
+        public Money? TaxAmount { get; set; }
     }
 }

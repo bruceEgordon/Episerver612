@@ -79,7 +79,7 @@ namespace CommerceTraining.Controllers
 
         // added for Adv. Cart clean, check/add second ship & pay
         CartAndCheckoutService ccService = new CartAndCheckoutService();
-        CustomTaxManager ctm = new CustomTaxManager();
+        CustomTaxManager customTaxManager = new CustomTaxManager();
 
 
         // ToDo: move to .ctor
@@ -341,31 +341,31 @@ namespace CommerceTraining.Controllers
 
         public IEnumerable<string> GetTaxStrings(ShirtVariation currentContent)
         {
-            List<string> temp = new List<string>();
+            List<string> tempTaxStrings = new List<string>();
 
-            TaxValue[] taxes = ctm.GetTaxes((int)currentContent.TaxCategoryId);
+            TaxValue[] taxes = customTaxManager.GetTaxes((int)currentContent.TaxCategoryId);
 
             if (taxes.Count() > 0)
             {
                 foreach (TaxValue item in taxes)
                 {
-                    temp.Add(item.TaxType + " " + item.Name + " " + item.Percentage.ToString() + "%");
+                    tempTaxStrings.Add(item.TaxType + " " + item.Name + " " + item.Percentage.ToString() + "%");
                 }
             }
             else
             {
-                temp.Add("...no taxes");
+                tempTaxStrings.Add("...no taxes");
             }
 
-            return temp;
+            return tempTaxStrings;
         }
 
         private decimal GetTaxOldSchool(ShirtVariation currentContent)
         {
-            TaxValue[] tv = ctm.GetTaxes((int)currentContent.TaxCategoryId);
-            if (tv.Count() > 0)
+            TaxValue[] taxValues = customTaxManager.GetTaxes((int)currentContent.TaxCategoryId);
+            if (taxValues.Count() > 0)
             {
-                return (decimal)tv.FirstOrDefault().Percentage * GetThePriceToPlace(currentContent) / 100;
+                return (decimal)taxValues.FirstOrDefault().Percentage * GetThePriceToPlace(currentContent) / 100;
             }
             else
             {
@@ -375,6 +375,7 @@ namespace CommerceTraining.Controllers
         }
 
         Injected<ITaxCalculator> _taxCalc;
+
         private string GetTaxNewSchool(ShirtVariation currentContent)
         {
             IMarket market = _currentMarket.GetCurrentMarket();
@@ -387,17 +388,28 @@ namespace CommerceTraining.Controllers
             ILineItem lineItem = _orderGroupFactory.CreateLineItem(currentContent.Code, cart);
             lineItem.Quantity = 1;
             lineItem.PlacedPrice = GetCustomerPricingPrice(currentContent).UnitPrice.Amount;
+            lineItem.TaxCategoryId = currentContent.TaxCategoryId;
             cart.AddLineItem(lineItem);
 
+            IOrderAddress bogusAddress = _orderGroupFactory.CreateOrderAddress(cart);
+            bogusAddress.CountryCode = "sv";
+            bogusAddress.City = "Stockholm";
+            bogusAddress.CountryName = "Sweden";
+
             string str = String.Empty;
-            str += _taxCalc.Service.GetTaxTotal(cart, market, market.DefaultCurrency).Amount.ToString();
+            //str += _taxCalc.Service.GetTaxTotal(cart, market, market.DefaultCurrency).Amount.ToString();
+
+            var taxValues = Enumerable.Empty<ITaxValue>();
+            taxValues = OrderContext.Current.GetTaxes(Guid.Empty, currentContent.theTaxCategory, "sv", bogusAddress);
+
+            str = _taxCalc.Service.GetSalesTax(lineItem, market, bogusAddress, new Money(0m,"SEK")).ToString();
+            
 
             return str;
         }
 
         private decimal GetThePriceToPlace(ShirtVariation currentContent)
         {
-            // This is the original...
             PricingService myPricing = new PricingService(
              _priceService, _currentMarket, _priceDetailService);
 
@@ -439,6 +451,8 @@ namespace CommerceTraining.Controllers
 
             // new line, check in TrousersController
             cart.Properties["SpecialShip"] = false;
+
+            ICollection<IPayment> payments = cart.GetFirstForm().Payments;
 
             string code = currentContent.Code;
 
@@ -690,6 +704,8 @@ namespace CommerceTraining.Controllers
             // CatalogContext.Current.GetCatalogEntriesDto()
 
             //currentContent.LoadEntryDt
+
+            //ServiceLocator.Current.GetInstance<IOrderRepository>().Load<IOrderGroup>();
 
         }
 

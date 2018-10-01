@@ -19,3 +19,6 @@
 <h4>Shirt Details</h4>
 @Html.PropertyFor(m => m.Shirt.Name)
 Price based on current market: @Model.Shirt.GetDefaultPrice().UnitPrice.ToString()
+<div>
+    Tax amount based on default price: @(Model.TaxAmount != null ? Model.TaxAmount.ToString() : "N/A")
+</div>
