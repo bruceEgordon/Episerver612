@@ -1,5 +1,7 @@
-﻿using EPiServer.Commerce.Order;
+﻿using EPiServer;
+using EPiServer.Commerce.Order;
 using Mediachase.Commerce;
+using Mediachase.Commerce.Catalog;
 using Mediachase.Commerce.Catalog.Managers;
 using Mediachase.Commerce.Orders;
 using System;
@@ -12,6 +14,8 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
     public class DemoCustomTaxCalc : ITaxCalculator
     {
         private ITaxCalculator _defaultTaxCalculator;
+        private IContentRepository _contentRepository;
+        private ReferenceConverter _referenceConverter;
 
         public DemoCustomTaxCalc(ITaxCalculator defaultTaxCalculator)
         {
@@ -36,7 +40,6 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
                 {
                     decPrice += (decimal)(tax.Percentage + 0.10) * (lineItem.PlacedPrice * lineItem.Quantity);
                 }
-                return new Money(decPrice, basePrice.Currency);
             }
             else
             {
@@ -45,8 +48,8 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
                 {
                     decPrice += (decimal)(tax.Percentage) * (lineItem.PlacedPrice * lineItem.Quantity);
                 }
-                return new Money(decPrice, basePrice.Currency);
             }
+            return new Money(decPrice, basePrice.Currency) / 100;
         }
 
         [Obsolete("Don't use")]

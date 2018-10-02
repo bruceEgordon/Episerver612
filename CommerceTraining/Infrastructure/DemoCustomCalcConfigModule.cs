@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using CommerceTraining.Infrastructure.CartAndCheckout;
+using EPiServer;
 using EPiServer.Commerce.Order;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using EPiServer.ServiceLocation;
+using Mediachase.Commerce.Catalog;
 
 namespace CommerceTraining.Infrastructure
 {

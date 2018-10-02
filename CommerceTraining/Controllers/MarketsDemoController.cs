@@ -79,7 +79,7 @@ namespace CommerceTraining.Controllers
 
             IOrderAddress bogusAddress = _orderGroupFactory.CreateOrderAddress(cart);
             //bogusAddress.CountryCode = "sv";
-            bogusAddress.CountryCode = "usa";
+            bogusAddress.CountryCode = viewModel.SelectedMarket.Countries.FirstOrDefault();
             bogusAddress.City = "Stockholm";
             bogusAddress.CountryName = "Sweden";
 
@@ -90,19 +90,24 @@ namespace CommerceTraining.Controllers
 
             cart.AddLineItem(lineItem);
 
-            viewModel.TaxAmount = _taxCalculator.GetSalesTax(lineItem, viewModel.SelectedMarket, bogusAddress, new Money(0m, viewModel.SelectedMarket.DefaultCurrency));
+            //viewModel.TaxAmount = _taxCalculator.GetSalesTax(lineItem, viewModel.SelectedMarket,
+            //    bogusAddress, new Money(0m, viewModel.SelectedMarket.DefaultCurrency));
+            viewModel.TaxAmount = GetTaxOldSchool(viewModel, bogusAddress);
         }
 
-        private decimal GetTaxOldSchool(ShirtVariation shirt, string languageCode, IOrderAddress orderAddress)
+        private Money GetTaxOldSchool(DemoMarketsViewModel viewModel, IOrderAddress orderAddress)
         {
             decimal decTaxTotal = 0;
-            string taxCategory = CatalogTaxManager.GetTaxCategoryNameById((int)shirt.TaxCategoryId);
-            IEnumerable<TaxValue> taxes = OrderContext.Current.GetTaxes(Guid.Empty, taxCategory, languageCode,  orderAddress);
+            string taxCategory = CatalogTaxManager.GetTaxCategoryNameById((int)viewModel.Shirt.TaxCategoryId);
+
+            IEnumerable<TaxValue> taxes = OrderContext.Current.GetTaxes(Guid.Empty,
+                taxCategory, viewModel.SelectedMarket.DefaultLanguage.TwoLetterISOLanguageName,  orderAddress);
+
             foreach (var tax in taxes)
             {
-                decTaxTotal += (decimal)tax.Percentage * shirt.GetDefaultPrice().UnitPrice;
+                decTaxTotal += (decimal)tax.Percentage * viewModel.Shirt.GetDefaultPrice().UnitPrice;
             }
-            return decTaxTotal;
+            return new Money(decTaxTotal, viewModel.SelectedMarket.DefaultCurrency) / 100;
         }
     }
 }
