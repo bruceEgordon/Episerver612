@@ -89,24 +89,26 @@ namespace CommerceTraining.Controllers
 
             cart.AddLineItem(lineItem);
 
-            //viewModel.TaxAmount = _taxCalculator.GetSalesTax(lineItem, viewModel.SelectedMarket,
-            //    bogusAddress, new Money(0m, viewModel.SelectedMarket.DefaultCurrency));
-            viewModel.TaxAmount = GetTaxOldSchool(viewModel, bogusAddress);
+            viewModel.TaxAmountOldSchool = GetTaxOldSchool(viewModel, bogusAddress);
+
+            viewModel.TaxAmount = _taxCalculator.GetSalesTax(lineItem, viewModel.SelectedMarket,
+                bogusAddress, new Money(lineItem.PlacedPrice, viewModel.SelectedMarket.DefaultCurrency));
         }
 
         private Money GetTaxOldSchool(DemoMarketsViewModel viewModel, IOrderAddress orderAddress)
         {
-            decimal decTaxTotal = 0;
             string taxCategory = CatalogTaxManager.GetTaxCategoryNameById((int)viewModel.Shirt.TaxCategoryId);
 
-            IEnumerable<TaxValue> taxes = OrderContext.Current.GetTaxes(Guid.Empty,
+            viewModel.Taxes = OrderContext.Current.GetTaxes(Guid.Empty,
                 taxCategory, viewModel.SelectedMarket.DefaultLanguage.TwoLetterISOLanguageName,  orderAddress);
 
-            foreach (var tax in taxes)
-            {
-                decTaxTotal += (decimal)tax.Percentage * viewModel.Shirt.GetDefaultPrice().UnitPrice;
-            }
-            return new Money(decTaxTotal, viewModel.SelectedMarket.DefaultCurrency) / 100;
+            decimal decTaxTotal = (decimal)(from x in viewModel.Taxes
+                                    where x.TaxType == TaxType.SalesTax
+                                    select x).Sum((ITaxValue x) => x.Percentage);
+
+            decimal itemPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
+
+            return new Money(itemPrice * decTaxTotal / 100m, viewModel.SelectedMarket.DefaultCurrency);
         }
     }
 }

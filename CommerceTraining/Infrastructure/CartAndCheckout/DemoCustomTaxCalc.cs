@@ -30,26 +30,22 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
 
         public Money GetSalesTax(ILineItem lineItem, IMarket market, IOrderAddress shippingAddress, Money basePrice)
         {
-            decimal decPrice = 0;
-            string taxCategory = CatalogTaxManager.GetTaxCategoryNameById((int)lineItem.TaxCategoryId);
-            IEnumerable<ITaxValue> taxes = OrderContext.Current.GetTaxes(Guid.Empty, taxCategory, market.DefaultLanguage.TwoLetterISOLanguageName, shippingAddress);
-
             if(market.MarketId.Value == "sv" && shippingAddress.City == "Stockholm")
             {
-                foreach(var tax in taxes)
+                decimal decPrice = 0;
+                string taxCategory = CatalogTaxManager.GetTaxCategoryNameById((int)lineItem.TaxCategoryId);
+                IEnumerable<ITaxValue> taxes = OrderContext.Current.GetTaxes(Guid.Empty, taxCategory, market.DefaultLanguage.TwoLetterISOLanguageName, shippingAddress);
+
+                foreach (var tax in taxes)
                 {
                     decPrice += (decimal)(tax.Percentage + 0.10) * (lineItem.PlacedPrice * lineItem.Quantity);
                 }
+                return new Money(decPrice, basePrice.Currency) / 100;
             }
             else
             {
-                //return _defaultTaxCalculator.GetSalesTax(lineItem, market, shippingAddress, basePrice);
-                foreach (var tax in taxes)
-                {
-                    decPrice += (decimal)(tax.Percentage) * (lineItem.PlacedPrice * lineItem.Quantity);
-                }
+                return _defaultTaxCalculator.GetSalesTax(lineItem, market, shippingAddress, basePrice);
             }
-            return new Money(decPrice, basePrice.Currency) / 100;
         }
 
         [Obsolete("Don't use")]
