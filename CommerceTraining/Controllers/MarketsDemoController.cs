@@ -78,7 +78,6 @@ namespace CommerceTraining.Controllers
             ICart cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "BogusCart");
 
             IOrderAddress bogusAddress = _orderGroupFactory.CreateOrderAddress(cart);
-            //bogusAddress.CountryCode = "sv";
             bogusAddress.CountryCode = viewModel.SelectedMarket.Countries.FirstOrDefault();
             bogusAddress.City = "Stockholm";
             bogusAddress.CountryName = "Sweden";
