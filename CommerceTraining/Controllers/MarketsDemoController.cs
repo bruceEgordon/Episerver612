@@ -79,7 +79,7 @@ namespace CommerceTraining.Controllers
 
             IOrderAddress bogusAddress = _orderGroupFactory.CreateOrderAddress(cart);
             bogusAddress.CountryCode = viewModel.SelectedMarket.Countries.FirstOrDefault();
-            //bogusAddress.City = "Stockholm";
+            bogusAddress.City = "Stockholm";
             viewModel.TaxAmountOldSchool = GetTaxOldSchool(viewModel, bogusAddress);
 
             ILineItem lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);

@@ -34,7 +34,7 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
             {
                 decimal decPrice = 0;
                 string taxCategory = CatalogTaxManager.GetTaxCategoryNameById((int)lineItem.TaxCategoryId);
-                IEnumerable<ITaxValue> taxes = OrderContext.Current.GetTaxes(Guid.Empty, taxCategory, market.DefaultLanguage.TwoLetterISOLanguageName, shippingAddress);
+                IEnumerable<ITaxValue> taxes = OrderContext.Current.GetTaxes(Guid.Empty, taxCategory, "sv", shippingAddress);
 
                 foreach (var tax in taxes)
                 {
