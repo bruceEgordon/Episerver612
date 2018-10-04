@@ -79,8 +79,8 @@ namespace CommerceTraining.Controllers
 
             IOrderAddress bogusAddress = _orderGroupFactory.CreateOrderAddress(cart);
             bogusAddress.CountryCode = viewModel.SelectedMarket.Countries.FirstOrDefault();
-            bogusAddress.City = "Stockholm";
-            bogusAddress.CountryName = "Sweden";
+            //bogusAddress.City = "Stockholm";
+            viewModel.TaxAmountOldSchool = GetTaxOldSchool(viewModel, bogusAddress);
 
             ILineItem lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);
             lineItem.Quantity = 1;
@@ -88,8 +88,6 @@ namespace CommerceTraining.Controllers
             lineItem.TaxCategoryId = viewModel.Shirt.TaxCategoryId;
 
             cart.AddLineItem(lineItem);
-
-            viewModel.TaxAmountOldSchool = GetTaxOldSchool(viewModel, bogusAddress);
 
             viewModel.TaxAmount = _taxCalculator.GetSalesTax(lineItem, viewModel.SelectedMarket,
                 bogusAddress, new Money(lineItem.PlacedPrice, viewModel.SelectedMarket.DefaultCurrency));
