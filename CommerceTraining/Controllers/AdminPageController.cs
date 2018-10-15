@@ -514,124 +514,49 @@ Parameter name: ContactInformation */
 
         public void CreateTaxCategoryAndJurisdiction()
         {
-            // need a category (Catalog)
             CatalogTaxDto t_Dto = CatalogTaxManager.CreateTaxCategory("VAT", true);
+ 
+            JurisdictionDto jurisdictionDto = JurisdictionManager.GetJurisdictions(JurisdictionManager.JurisdictionType.Tax);
 
-            // get a dto (works like catalog I guess)
-            // need a JurisdictionDto ... works like a bucket
-            // Have some code in pptx ... 
-            JurisdictionDto jurisdictionDto = JurisdictionManager.GetJurisdictions
-                (JurisdictionManager.JurisdictionType.Tax);
-            JurisdictionDto.JurisdictionRow jurisdictionRow =
-                jurisdictionDto.Jurisdiction.NewJurisdictionRow();
+            JurisdictionDto.JurisdictionRow jurisdictionRow = jurisdictionDto.Jurisdiction.NewJurisdictionRow();
             jurisdictionRow.County = "HomeLand";
             jurisdictionRow.DisplayName = "HomeLand";
             jurisdictionRow.District = "WholeCountry";
             jurisdictionRow.CountryCode = "se";
             jurisdictionRow.Code = "se";
-            //jurisdictionRow.ApplicationId = AppContext.Current.ApplicationId;
-            // also exists 
-            // OrderConfiguration.Instance.ApplicationId;
-
-            // ToDo: ...needed, how to - Check ... it´s hard coded in the tax-importer !?
-            //int type = JurisdictionManager.JurisdictionType.Tax;
-            // j_row.JurisdictionType = 1;
-            jurisdictionRow.JurisdictionType =
-                (int)JurisdictionManager.JurisdictionType.Tax; // found in CM
-
-            // ...easy to forget
+            jurisdictionRow.JurisdictionType = (int)JurisdictionManager.JurisdictionType.Tax;
             jurisdictionDto.Jurisdiction.AddJurisdictionRow(jurisdictionRow);
 
-
-            // Groups, another bucket ... 
-            JurisdictionDto.JurisdictionGroupRow jurisdictionGroup =
-                jurisdictionDto.JurisdictionGroup.NewJurisdictionGroupRow();
+            JurisdictionDto.JurisdictionGroupRow jurisdictionGroup = jurisdictionDto.JurisdictionGroup.NewJurisdictionGroupRow();
             jurisdictionGroup.DisplayName = "HomeLand Group";
             jurisdictionGroup.Code = "se_gr";
-            //jurisdictionGroup.ApplicationId = AppContext.Current.ApplicationId;
-            jurisdictionGroup.JurisdictionType =
-                JurisdictionManager.JurisdictionType.Tax.GetHashCode(); // found in CM
+            jurisdictionGroup.JurisdictionType = JurisdictionManager.JurisdictionType.Tax.GetHashCode();
             jurisdictionDto.JurisdictionGroup.AddJurisdictionGroupRow(jurisdictionGroup);
 
-            JurisdictionDto.JurisdictionRelationRow jurisdictionRelation =
-                jurisdictionDto.JurisdictionRelation.NewJurisdictionRelationRow();
+            JurisdictionDto.JurisdictionRelationRow jurisdictionRelation = jurisdictionDto.JurisdictionRelation.NewJurisdictionRelationRow();
             jurisdictionRelation.JurisdictionRow = jurisdictionRow;
             jurisdictionRelation.JurisdictionGroupRow = jurisdictionGroup;
             jurisdictionDto.JurisdictionRelation.AddJurisdictionRelationRow(jurisdictionRelation);
 
             JurisdictionManager.SaveJurisdiction(jurisdictionDto);
-
         }
 
         public void CreateTaxes()
         {
-            // In CM we do:
-            // - First TaxCategory and Jurisdiction Groups
-            // ...else cannot add taxes
+            TaxDto orderTaxDto = TaxManager.GetTaxDto(TaxType.SalesTax);
 
-            TaxType taxType = TaxType.SalesTax;
-
-            TaxDto orderTaxDto = TaxManager.GetTaxDto(taxType); // cheating with the language - correct later
-
-            // DisplayName finns ... på de språk som existerar
-
-            TaxDto.TaxRow taxRow = orderTaxDto.Tax.AddTaxRow(
-                 taxType.GetHashCode()
-                , "HomeLand_VAT"
-                , 10 // SortOrder
-                );
-
-            int taxId = taxRow.TaxId;
-
-            //TaxDto.TaxValueRow taxValueRow = orderTaxDto.TaxValue.AddTaxValueRow(
-            //    ,double.Parse("50")
-            //    ,taxRow
-            //    ,CatalogTaxManager.GetTaxCategoryNameById(3) // luxury - fix this
-            //    ,JurisdictionManager.GetJurisdictionGroup("NeverLand Group").JurisdictionGroup
-            //        .FirstOrDefault().JurisdictionGroupId
-            //    ,DateTime.UtcNow
-            //    ,OrderConfiguration.Instance.ApplicationId);
+            TaxDto.TaxRow taxRow = orderTaxDto.Tax.AddTaxRow(TaxType.SalesTax.GetHashCode(), "HomeLand_VAT", 10);
 
             TaxDto.TaxValueRow taxValueRow = orderTaxDto.TaxValue.NewTaxValueRow();
 
-            taxValueRow.TaxId = taxId;
-            taxValueRow.JurisdictionGroupId =
-                JurisdictionManager.GetJurisdictionGroup("se_gr") // is the code
-                .JurisdictionGroup[0].JurisdictionGroupId;
-
-            CatalogTaxDto taxDto = CatalogTaxManager.GetTaxCategories();
-            int taxInt = 0;
-            foreach (var item in taxDto.TaxCategory)
-            {
-                if (item.Name == "VAT")
-                {
-                    taxInt = item.TaxCategoryId;
-                }
-            }
-            // just to show
-            taxValueRow.TaxCategory = CatalogTaxManager.GetTaxCategoryNameById(taxInt);
-
-            taxValueRow.Percentage = double.Parse("25");
+            taxValueRow.TaxId = taxRow.TaxId;
+            taxValueRow.JurisdictionGroupId = JurisdictionManager.GetJurisdictionGroup("se_gr").JurisdictionGroup[0].JurisdictionGroupId;
+            taxValueRow.TaxCategory = "VAT";
+            taxValueRow.Percentage = 25;
             taxValueRow.AffectiveDate = DateTime.UtcNow;
-            // Note: AppId is gone in 11
-            //taxValueRow.SiteId = OrderConfiguration.Instance.ApplicationId; // no more
-            //taxValueRow.SiteId = Guid.Empty;
             orderTaxDto.TaxValue.AddTaxValueRow(taxValueRow);
-
-            //,double.Parse("50")
-            //,taxRow
-            //,CatalogTaxManager.GetTaxCategoryNameById(3) // luxury - fix this
-            //,JurisdictionManager.GetJurisdictionGroup("NeverLand Group")
-            //,DateTime.UtcNow
-            //,OrderConfiguration.Instance.ApplicationId);
-
-
-            //orderTaxDto.TaxValue.AddTaxValueRow(taxValueRow);
-
+            
             TaxManager.SaveTax(orderTaxDto);
-
-            // ok, works so far... 
-
         }
 
         // For test
