@@ -9,6 +9,7 @@ using Mediachase.Commerce.Catalog.Managers;
 using Mediachase.Commerce.Customers;
 using Mediachase.Commerce.Markets;
 using Mediachase.Commerce.Orders;
+using Mediachase.Commerce.Pricing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,12 @@ namespace CommerceTraining.Controllers
         private IOrderRepository _orderRepository;
         private IOrderGroupFactory _orderGroupFactory;
         private ITaxCalculator _taxCalculator;
+        private IPriceService _priceService;
 
         public MarketsDemoController(IMarketService marketService, ICurrentMarket currentMarket,
             ReferenceConverter referenceConverter, IContentLoader contentLoader,
             IOrderRepository orderRepository, IOrderGroupFactory orderGroupFactory,
-            ITaxCalculator taxCalculator)
+            ITaxCalculator taxCalculator, IPriceService priceService)
         {
             _marketService = marketService;
             _currentMarket = currentMarket;
@@ -39,6 +41,7 @@ namespace CommerceTraining.Controllers
             _orderRepository = orderRepository;
             _orderGroupFactory = orderGroupFactory;
             _taxCalculator = taxCalculator;
+            _priceService = priceService;
         }
         // GET: MarketsDemo
         public ActionResult Index()
@@ -51,6 +54,7 @@ namespace CommerceTraining.Controllers
             viewModel.Shirt = _contentLoader.Get<ShirtVariation>(shirtRef);
 
             GetTaxInfo(viewModel);
+            GetPriceInfo(viewModel);
 
             return View(viewModel);
         }
@@ -69,6 +73,7 @@ namespace CommerceTraining.Controllers
             viewModel.Shirt = _contentLoader.Get<ShirtVariation>(shirtRef);
 
             GetTaxInfo(viewModel);
+            GetPriceInfo(viewModel);
 
             return View("Index", viewModel);
         }
@@ -107,6 +112,17 @@ namespace CommerceTraining.Controllers
             decimal itemPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
 
             return new Money(itemPrice * decTaxTotal / 100m, viewModel.SelectedMarket.DefaultCurrency);
+        }
+
+        private void GetPriceInfo(DemoMarketsViewModel viewModel)
+        {
+            viewModel.OptimizedPrices = _priceService.GetPrices(viewModel.SelectedMarket.MarketId,
+                DateTime.Now, new CatalogKey(viewModel.Shirt.Code), new PriceFilter());
+
+            viewModel.HighestPrice = viewModel.OptimizedPrices
+                .Where(p => p.CustomerPricing.PriceTypeId == CustomerPricing.PriceType.AllCustomers)
+                .OrderByDescending(p => p.UnitPrice)
+                .First().UnitPrice;
         }
     }
 }

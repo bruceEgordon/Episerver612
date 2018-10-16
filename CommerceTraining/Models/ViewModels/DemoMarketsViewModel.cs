@@ -1,6 +1,7 @@
 ﻿using CommerceTraining.Models.Catalog;
 using Mediachase.Commerce;
 using Mediachase.Commerce.Orders;
+using Mediachase.Commerce.Pricing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace CommerceTraining.Models.ViewModels
         public Money? TaxAmount { get; set; }
         public Money? TaxAmountOldSchool { get; set; }
         public IEnumerable<TaxValue> Taxes { get; set; }
+        public IEnumerable<IPriceValue> OptimizedPrices { get; set; }
+        public Money? HighestPrice { get; set; }
     }
 }

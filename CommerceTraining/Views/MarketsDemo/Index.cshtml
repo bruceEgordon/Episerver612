@@ -1,4 +1,5 @@
 ﻿@using EPiServer.Commerce.Catalog.ContentTypes
+@using Mediachase.Commerce.Pricing
 @model CommerceTraining.Models.ViewModels.DemoMarketsViewModel
 
 @{
@@ -36,3 +37,33 @@
     Tax amount from ITaxCalculator:
     @(Model.TaxAmount != null ? Model.TaxAmount.ToString() : "N/A")
 </p>
+<b>Optimized Price List</b>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Market</th>
+            <th scope="col">Price Type</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OptimizedPrices)
+        {
+            <tr>
+                <th scope="row">@item.MarketId.Value</th>
+                <td>@switch ((int)item.CustomerPricing.PriceTypeId) {
+                    case 0: @:All Customers
+                        break;
+                    case 1: @:Customer
+                        break;
+                    case 2: @:Customer Price Group
+                        break;
+                    case 3: @:Lowest Possible Price
+                        break;
+                    }</td>
+                <td>@item.UnitPrice.ToString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p><b>Highest Price:</b> @Model.HighestPrice.ToString()</p>

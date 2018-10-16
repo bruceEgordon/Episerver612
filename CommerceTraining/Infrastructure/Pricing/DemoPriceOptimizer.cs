@@ -15,22 +15,31 @@ namespace CommerceTraining.Infrastructure.Pricing
         }
         public IEnumerable<IOptimizedPriceValue> OptimizePrices(IEnumerable<IPriceValue> prices)
         {
-            var shirtPrice = from price in prices
-                             where price.CatalogKey.CatalogEntryCode == "Long Sleeve Shirt White Small_1"
-                             select price;
-            if (shirtPrice != null && shirtPrice.Count() > 0)
+            var code = prices.First().CatalogKey.CatalogEntryCode;
+
+            if (code == "Long Sleeve Shirt White Small_1")
             {
-                return shirtPrice.GroupBy(p => new
+                //var shirts = prices.GroupBy(p => new
+                //{
+                //    p.CatalogKey,
+                //    p.MinQuantity,
+                //    p.MarketId,
+                //    p.ValidFrom,
+                //    p.CustomerPricing,
+                //    p.UnitPrice.Currency
+                //})
+                //.Select(g => g.OrderByDescending(c => c.UnitPrice.Amount)
+                //.First()).Select(p => new OptimizedPriceValue(p, null));
+
+                var shirts = prices.GroupBy(p => new
                 {
-                    p.CatalogKey,
-                    p.MinQuantity,
                     p.MarketId,
-                    p.ValidFrom,
-                    p.CustomerPricing,
-                    p.UnitPrice.Currency
+                    p.CustomerPricing
                 })
-                    .Select(g => g.OrderByDescending(c => c.UnitPrice.Amount)
-                    .First()).Select(p => new OptimizedPriceValue(p, null));
+                .Select(g => g.OrderByDescending(c => c.UnitPrice.Amount).First())
+                .Select(p => new OptimizedPriceValue(p, null));
+
+                return shirts;
             }
             else return _defaultPriceOptimzer.OptimizePrices(prices);
         }
