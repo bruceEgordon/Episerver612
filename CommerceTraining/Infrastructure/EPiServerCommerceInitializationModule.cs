@@ -202,7 +202,7 @@ namespace CommerceTraining.Infrastructure
             // newer
             //context.Services.AddTransient<ICurrentMarket, MyCustomCurrentMarket>();
 
-            context.Services.AddSingleton<IPriceOptimizer, CustomPriceOptimizer>();
+            context.Services.AddSingleton<IPriceOptimizer, DemoPriceOptimizer>();
 
             //context.Services.AddSingleton<ITaxCalculator, CustomTaxCalculator>();
 

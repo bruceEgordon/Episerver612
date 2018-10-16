@@ -18,7 +18,21 @@ namespace CommerceTraining.Infrastructure.Pricing
             var shirtPrice = from price in prices
                              where price.CatalogKey.CatalogEntryCode == "Long Sleeve Shirt White Small_1"
                              select price;
-            throw new NotImplementedException();
+            if (shirtPrice != null && shirtPrice.Count() > 0)
+            {
+                return shirtPrice.GroupBy(p => new
+                {
+                    p.CatalogKey,
+                    p.MinQuantity,
+                    p.MarketId,
+                    p.ValidFrom,
+                    p.CustomerPricing,
+                    p.UnitPrice.Currency
+                })
+                    .Select(g => g.OrderByDescending(c => c.UnitPrice.Amount)
+                    .First()).Select(p => new OptimizedPriceValue(p, null));
+            }
+            else return _defaultPriceOptimzer.OptimizePrices(prices);
         }
     }
 }
