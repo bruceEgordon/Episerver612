@@ -116,8 +116,13 @@ namespace CommerceTraining.Controllers
 
         private void GetPriceInfo(DemoMarketsViewModel viewModel)
         {
+            var filter = new PriceFilter();
+            filter.Quantity = 2;
+
             viewModel.OptimizedPrices = _priceService.GetPrices(viewModel.SelectedMarket.MarketId,
-                DateTime.Now, new CatalogKey(viewModel.Shirt.Code), new PriceFilter());
+                DateTime.Now, new CatalogKey(viewModel.Shirt.Code), filter);
+
+            
 
             viewModel.HighestPrice = viewModel.OptimizedPrices
                 .Where(p => p.CustomerPricing.PriceTypeId == CustomerPricing.PriceType.AllCustomers)

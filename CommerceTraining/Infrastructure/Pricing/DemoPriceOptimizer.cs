@@ -19,27 +19,14 @@ namespace CommerceTraining.Infrastructure.Pricing
 
             if (code == "Long Sleeve Shirt White Small_1")
             {
-                //var shirts = prices.GroupBy(p => new
-                //{
-                //    p.CatalogKey,
-                //    p.MinQuantity,
-                //    p.MarketId,
-                //    p.ValidFrom,
-                //    p.CustomerPricing,
-                //    p.UnitPrice.Currency
-                //})
-                //.Select(g => g.OrderByDescending(c => c.UnitPrice.Amount)
-                //.First()).Select(p => new OptimizedPriceValue(p, null));
-
-                var shirts = prices.GroupBy(p => new
+                return prices.GroupBy(p => new
                 {
                     p.MarketId,
-                    p.CustomerPricing
+                    p.CustomerPricing,
+                    p.MinQuantity
                 })
                 .Select(g => g.OrderByDescending(c => c.UnitPrice.Amount).First())
                 .Select(p => new OptimizedPriceValue(p, null));
-
-                return shirts;
             }
             else return _defaultPriceOptimzer.OptimizePrices(prices);
         }
