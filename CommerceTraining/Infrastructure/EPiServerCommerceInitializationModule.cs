@@ -199,80 +199,12 @@ namespace CommerceTraining.Infrastructure
         {
             DependencyResolver.SetResolver(new StructureMapDependencyResolver(context.StructureMap()));
 
-            // newer
-            //context.Services.AddTransient<ICurrentMarket, MyCustomCurrentMarket>();
-
             context.Services.AddSingleton<IPriceOptimizer, DemoPriceOptimizer>();
-
-            //context.Services.AddSingleton<ITaxCalculator, CustomTaxCalculator>();
 
             context.Services.AddSingleton<IPriceService, MyPriceService>();
 
             context.Services.AddSingleton<PromotionEngineContentLoader, CustomPromotionEngineContentLoader>();
-            
-            //context.Services.RemoveAll<ThumbnailManager>(); // "Internal" ... had a question about it
-
-            // older, gone in 12 ... but still works in 11 
-            //context.Container.Configure(c =>
-            //{
-            //    //c.For<ICurrentMarket>().Singleton().Use<MyCustomCurrentMarket>();
-            //    c.For<IPriceService>().Singleton().Use<MyPriceService>();
-
-            //    // If we need to override (prob. does)
-            //    c.For<PromotionEngineContentLoader>().Singleton()
-            //    .Use<CustomPromotionEngineContentLoader>();
-
-            //    #region QS
-
-            //    //c.For<Func<string, CartHelper>>()
-            //    //.HybridHttpOrThreadLocalScoped()
-            //    //.Use(() => new Func<string, CartHelper>((cartName) => new CartHelper(cartName, PrincipalInfo.CurrentPrincipal.GetContactId())));
-
-            //    ////Register for auto injection of edit mode check, should be default life cycle (per request)
-            //    //c.For<Func<bool>>()
-            //    //.Use(() => new Func<bool>(() => PageEditing.PageIsInEditMode));
-
-            //    //c.For<IUpdateCurrentLanguage>()
-            //    //    .Singleton()
-            //    //    .Use<LanguageService>()
-            //    //    .Setter<IUpdateCurrentLanguage>()
-            //    //    .Is(x => x.GetInstance<UpdateCurrentLanguage>());
-
-            //    //c.For<Func<CultureInfo>>().Use(() => new Func<CultureInfo>(() => ContentLanguage.PreferredCulture));
-
-            //    //Func<IOwinContext> owinContextFunc = () => HttpContext.Current.GetOwinContext();
-            //    //c.For<ApplicationUserManager>().Use(() => owinContextFunc().GetUserManager<ApplicationUserManager>());
-            //    //c.For<ApplicationSignInManager>().Use(() => owinContextFunc().Get<ApplicationSignInManager>());
-            //    //c.For<IAuthenticationManager>().Use(() => owinContextFunc().Authentication);
-            //    //c.For<IOwinContext>().Use(() => owinContextFunc());
-            //    //c.For<IModelBinderProvider>().Use<ModelBinderProvider>();
-
-            //    #endregion
-
-            //    // latest addition
-            //    /*context.Services.Intercept<IUpdateCurrentLanguage>(
-            //        (locator, defaultImplementation) =>
-            //            new LanguageService(
-            //                locator.GetInstance<ICurrentMarket>(),
-            //                locator.GetInstance<MyCookieService>(),
-            //                defaultImplementation,
-            //                locator.GetInstance<RequestContext>()));*/
-            //});
-
-            
-        }
-
-        public void Register(TemplateModelCollection viewTemplateModelRegistrator)
-        {
-            // ECF?
-            //viewTemplateModelRegistrator.Add(typeof(AccessoryNode), new TemplateModel
-            //{
-            //    Name = "SpecialAccessoryRendering",
-            //    //Tags = new[] { Global.ContentAreaTags.TwoThirdsWidth, Global.ContentAreaTags.FullWidth },
-            //    AvailableWithoutTag = true,
-            //    Path = "~/Views/ViewsNoController/StrangeAccessoriesView.cshtml"
-
-            //});
+           
         }
     }
 }

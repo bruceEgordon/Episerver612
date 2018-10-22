@@ -3,6 +3,7 @@ using CommerceTraining.Models.ViewModels;
 using EPiServer;
 using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Commerce.Order;
+using EPiServer.Security;
 using Mediachase.Commerce;
 using Mediachase.Commerce.Catalog;
 using Mediachase.Commerce.Catalog.Managers;
@@ -117,17 +118,34 @@ namespace CommerceTraining.Controllers
         private void GetPriceInfo(DemoMarketsViewModel viewModel)
         {
             var filter = new PriceFilter();
-            filter.Quantity = 2;
 
             viewModel.OptimizedPrices = _priceService.GetPrices(viewModel.SelectedMarket.MarketId,
                 DateTime.Now, new CatalogKey(viewModel.Shirt.Code), filter);
 
-            
+            filter.Quantity = 1;
+            var custPricing = new List<CustomerPricing>
+            { new CustomerPricing(CustomerPricing.PriceType.AllCustomers, string.Empty) };
 
-            viewModel.HighestPrice = viewModel.OptimizedPrices
-                .Where(p => p.CustomerPricing.PriceTypeId == CustomerPricing.PriceType.AllCustomers)
-                .OrderByDescending(p => p.UnitPrice)
-                .First().UnitPrice;
+
+            if (CustomerContext.Current.CurrentContact != null)
+            {
+                if (!string.IsNullOrEmpty(PrincipalInfo.Current.Name))
+                {
+                    custPricing.Add(new CustomerPricing(CustomerPricing.PriceType.UserName,
+                        PrincipalInfo.Current.Name));
+                }
+
+                if (!string.IsNullOrEmpty(CustomerContext.Current.CurrentContact.EffectiveCustomerGroup))
+                {
+                    custPricing.Add(new CustomerPricing(CustomerPricing.PriceType.PriceGroup,
+                        CustomerContext.Current.CurrentContact.EffectiveCustomerGroup));
+                }
+            }
+
+            filter.CustomerPricing = custPricing;
+
+            viewModel.FilteredPrices = _priceService.GetPrices(viewModel.SelectedMarket.MarketId,
+                DateTime.Now, new CatalogKey(viewModel.Shirt.Code), filter);
         }
     }
 }
