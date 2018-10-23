@@ -2,6 +2,7 @@
 using CommerceTraining.Models.ViewModels;
 using EPiServer;
 using EPiServer.Commerce.Catalog.ContentTypes;
+using EPiServer.Commerce.Marketing;
 using EPiServer.Commerce.Order;
 using EPiServer.Security;
 using Mediachase.Commerce;
@@ -29,11 +30,13 @@ namespace CommerceTraining.Controllers
         private IOrderGroupFactory _orderGroupFactory;
         private ITaxCalculator _taxCalculator;
         private IPriceService _priceService;
+        private IPromotionEngine _promotionEngine;
 
         public MarketsDemoController(IMarketService marketService, ICurrentMarket currentMarket,
             ReferenceConverter referenceConverter, IContentLoader contentLoader,
             IOrderRepository orderRepository, IOrderGroupFactory orderGroupFactory,
-            ITaxCalculator taxCalculator, IPriceService priceService)
+            ITaxCalculator taxCalculator, IPriceService priceService,
+            IPromotionEngine promotionEngine)
         {
             _marketService = marketService;
             _currentMarket = currentMarket;
@@ -43,6 +46,7 @@ namespace CommerceTraining.Controllers
             _orderGroupFactory = orderGroupFactory;
             _taxCalculator = taxCalculator;
             _priceService = priceService;
+            _promotionEngine = promotionEngine;
         }
         // GET: MarketsDemo
         public ActionResult Index()
@@ -146,6 +150,30 @@ namespace CommerceTraining.Controllers
 
             viewModel.FilteredPrices = _priceService.GetPrices(viewModel.SelectedMarket.MarketId,
                 DateTime.Now, new CatalogKey(viewModel.Shirt.Code), filter);
+
+            Money lowestPrice = viewModel.FilteredPrices
+                .OrderBy(p => p.UnitPrice).First().UnitPrice;
+
+            Money lowestAllowed = viewModel.OptimizedPrices
+                .Where(p => p.CustomerPricing.PriceTypeId == (CustomerPricing.PriceType)3)
+                .First().UnitPrice;
+
+            var promos = _promotionEngine.Evaluate(viewModel.Shirt.ContentLink);
+
+            if(promos.Count() > 0)
+            {
+                viewModel.PromotionsTotal = promos.Sum(p => p.Percentage);
+                lowestPrice -= lowestPrice * viewModel.PromotionsTotal / 100;
+                if(lowestPrice < lowestAllowed)
+                {
+                    viewModel.SellingPrice = lowestAllowed;
+                }
+                else
+                {
+                    viewModel.SellingPrice = lowestPrice;
+                    viewModel.PromotionsApplied = true;
+                }
+            }
         }
     }
 }

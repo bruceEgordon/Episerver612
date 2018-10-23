@@ -19,8 +19,8 @@ namespace CommerceTraining.Models.ViewModels
         public IEnumerable<TaxValue> Taxes { get; set; }
         public IEnumerable<IPriceValue> OptimizedPrices { get; set; }
         public IEnumerable<IPriceValue> FilteredPrices { get; set; }
-        public string PromotionsTotal { get; set; }
-        public string SellingPrice { get; set; }
-        public bool PromotionsApplied { get; set; }
+        public decimal PromotionsTotal { get; set; }
+        public Money SellingPrice { get; set; }
+        public bool PromotionsApplied { get; set; } = false;
     }
 }
