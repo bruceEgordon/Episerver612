@@ -9,5 +9,6 @@ namespace CommerceTraining.Models.ViewModels
     public class WarehouseDemoViewModel
     {
         public IEnumerable<IWarehouse> Warehouses { get; set; }
+        public IWarehouse SelectedWarehouse { get; set; }
     }
 }

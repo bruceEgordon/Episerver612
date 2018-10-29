@@ -1,4 +1,5 @@
-﻿using Mediachase.Commerce.Inventory;
+﻿using CommerceTraining.Models.ViewModels;
+using Mediachase.Commerce.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,19 @@ namespace CommerceTraining.Controllers
         {
             _warehouseRepository = warehouseRepository;
         }
-        // GET: WareHouseDemo
         public ActionResult Index()
         {
-            
-            return View();
+            var viewModel = new WarehouseDemoViewModel();
+            viewModel.Warehouses = _warehouseRepository.List();
+            return View(viewModel);
+        }
+        public ActionResult Select(string code)
+        {
+            var viewModel = new WarehouseDemoViewModel();
+            viewModel.Warehouses = _warehouseRepository.List();
+            viewModel.SelectedWarehouse = viewModel.Warehouses.Where(w => w.Code == code).First();
+
+            return View("Index", viewModel);
         }
     }
 }

@@ -541,7 +541,6 @@
     <Folder Include="Business\" />
     <Folder Include="Infrastructure\Shipping\" />
     <Folder Include="Models\Properties\" />
-    <Folder Include="Views\WareHouseDemo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models\Catalog\_PlaceHolder.txt" />
@@ -633,6 +632,7 @@
     <Content Include="Views\FindSearchDemo\FindQueryIntegrated.cshtml" />
     <Content Include="Views\FindSearchDemo\ProjectionResult.cshtml" />
     <Content Include="Views\MarketsDemo\Index.cshtml" />
+    <Content Include="Views\WareHouseDemo\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
