@@ -1,7 +1,9 @@
 ﻿@model CommerceTraining.Models.ViewModels.WarehouseDemoViewModel
 
 @{
-    ViewBag.Title = "Warehouse Demo";
+                /**/
+
+                ViewBag.Title = "Warehouse Demo";
 }
 
 <h2>Warehouse Demo</h2>
@@ -22,25 +24,56 @@
                 <td>@wh.Code</td>
                 <td>@wh.IsPrimary</td>
                 <td>
-                    @Html.ActionLink("Edit", "Select", new { code=wh.Code })
+                    @Html.ActionLink("Edit", "Select", new { code = wh.Code })
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<h4>Warehouse Details</h4>
+<div>
+    @Html.ActionLink("Add New", "New")
+</div>
+
 @using (Html.BeginForm("Submit", "WareHouseDemo"))
 {
     if (Model.SelectedWarehouse != null)
     {
+        <h4>Warehouse Details</h4>
         <div>
             @Html.LabelFor(m => m.SelectedWarehouse.Name)
-        @Html.EditorFor(m => m.SelectedWarehouse.Name)
-    </div>
-    <div>
-        @Html.LabelFor(m => m.SelectedWarehouse.Code)
-        @Html.EditorFor(m => m.SelectedWarehouse.Code)
-    </div>
+            @Html.EditorFor(m => m.SelectedWarehouse.Name)
+        </div>
+        <div>
+            @Html.LabelFor(m => m.SelectedWarehouse.Code)
+            @Html.EditorFor(m => m.SelectedWarehouse.Code)
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.SelectedWarehouse.IsActive)
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsActive)
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(m => m.SelectedWarehouse.IsPrimary)
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsPrimary)
+                </div>
+            </div>
+        </div>
+
+    }
 }
+
+@if (Model.SelectedWarehouse != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-6">
+                test
+            </div>
+            <div class="col-xs-6">
+                ing
+            </div>
+        </div>
+    </div>
 }

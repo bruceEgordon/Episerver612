@@ -11,13 +11,13 @@
 <head>
     @*<title>@Model.CurrentPage.Name</title>*@
     <title>CommerceTraining</title>
-    <link rel="stylesheet" href="@Url.Content("~/Static/css/bootstrap.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/Static/css/bootstrap-responsive.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.css")" />
+    @*<link rel="stylesheet" href="@Url.Content("~/Static/css/bootstrap-responsive.css")" />*@
     <link rel="stylesheet" href="@Url.Content("~/Static/css/media.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Static/css/style.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Static/css/editmode.css")" />
-    <script type="text/javascript" src="@Url.Content("~/Static/js/jquery.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Static/js/bootstrap.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.0.0.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap.js")"></script>
 </head>
 <body>
     @* Renders quick naviation in top right corner*@
@@ -28,10 +28,10 @@
     <div class="container">
         <div class="row">
             <div id="header">
-                <div class="span2 right" >
+                <div class="col-2 right" >
                     <img src="~/Static/gfx/epi_edu.png" />
                 </div>
-                <div class="span10">
+                <div class="col-10">
                     @{Html.RenderPartial("Navigation");}
                 </div>
             </div>
