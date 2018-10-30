@@ -13,9 +13,9 @@
     <title>CommerceTraining</title>
     <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.css")" />
     @*<link rel="stylesheet" href="@Url.Content("~/Static/css/bootstrap-responsive.css")" />*@
-    <link rel="stylesheet" href="@Url.Content("~/Static/css/media.css")" />
+    @*<link rel="stylesheet" href="@Url.Content("~/Static/css/media.css")" />
     <link rel="stylesheet" href="@Url.Content("~/Static/css/style.css")" />
-    <link rel="stylesheet" href="@Url.Content("~/Static/css/editmode.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Static/css/editmode.css")" />*@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-3.0.0.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap.js")"></script>
 </head>
@@ -27,14 +27,15 @@
     @*@Html.FullRefreshPropertiesMetaData()*@
     <div class="container">
         <div class="row">
-            <div id="header">
-                <div class="col-2 right" >
-                    <img src="~/Static/gfx/epi_edu.png" />
-                </div>
+            @*<div id="header">*@
+
                 <div class="col-10">
                     @{Html.RenderPartial("Navigation");}
                 </div>
-            </div>
+                <div class="col-2 right">
+                    <img src="~/Static/gfx/epi_edu-2.png" />
+                </div>
+            @*</div>*@
         </div>
         <hr />
         @RenderBody()

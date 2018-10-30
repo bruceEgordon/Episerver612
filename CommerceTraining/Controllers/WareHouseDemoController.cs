@@ -30,5 +30,12 @@ namespace CommerceTraining.Controllers
 
             return View("Index", viewModel);
         }
+
+        public ActionResult New()
+        {
+            var viewModel = new WarehouseDemoViewModel();
+            viewModel.SelectedWarehouse = 
+            return View("Index", viewModel);
+        }
     }
 }

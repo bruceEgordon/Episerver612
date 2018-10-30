@@ -50,30 +50,46 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-2">
                     @Html.LabelFor(m => m.SelectedWarehouse.IsActive)
                     @Html.EditorFor(m => m.SelectedWarehouse.IsActive)
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-2">
                     @Html.LabelFor(m => m.SelectedWarehouse.IsPrimary)
                     @Html.EditorFor(m => m.SelectedWarehouse.IsPrimary)
                 </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.SelectedWarehouse.IsFulfillmentCenter)
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsFulfillmentCenter)
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.SelectedWarehouse.IsDeliveryLocation)
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsDeliveryLocation)
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.SelectedWarehouse.IsPickupLocation)
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsPickupLocation)
+                </div>
+            </div>
+            <div class="row"><h6>Contact Information</h6></div>
+            <div class="row">
+                <div class="col-md-4">
+                    @Html.LabelFor(m => m.SelectedWarehouse.ContactInformation.FirstName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.FirstName)
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(m => m.SelectedWarehouse.ContactInformation.MiddleName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.MiddleName)
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(m => m.SelectedWarehouse.ContactInformation.LastName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.LastName)
+                </div>
+            </div>
+            <div class="row">
+
             </div>
         </div>
 
     }
-}
-
-@if (Model.SelectedWarehouse != null)
-{
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-6">
-                test
-            </div>
-            <div class="col-xs-6">
-                ing
-            </div>
-        </div>
-    </div>
 }

@@ -7,15 +7,20 @@
     var childPages = cr.GetChildren<PageData>(ContentReference.StartPage);
 }
 
-<b>@Html.PageLink(ContentReference.StartPage)</b>
-@foreach (var page in childPages)
-{
-    if (page.VisibleInMenu == true)
-    {
-        <b>
-            -:-
-            @Html.PageLink(page)
-        </b>
-    }
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav">
+        <li class="nav-item active">
+            @Html.PageLink(ContentReference.StartPage, null, new { @class="navbar-brand"})
+        </li>
+        @foreach (var page in childPages)
+        {
+            if (page.VisibleInMenu == true)
+            {
+                <li class="nav-item">
+                    @Html.PageLink(page, null, new { @class = "nav-item nav-link" })
+                </li>
+            }
+        }
+    </ul>
+</nav> 
 
-}
