@@ -34,7 +34,16 @@ namespace CommerceTraining.Controllers
         public ActionResult New()
         {
             var viewModel = new WarehouseDemoViewModel();
-            viewModel.SelectedWarehouse = 
+            viewModel.Warehouses = _warehouseRepository.List();
+            viewModel.SelectedWarehouse = new Warehouse();
+            return View("Index", viewModel);
+        }
+
+        public ActionResult Submit([Bind(Prefix = "SelectedWarehouse", Exclude = "ContactInformation")]Warehouse warehouse,
+            [Bind(Prefix = "SelectedWarehouse.ContactInformation")]WarehouseContactInformation warehouseContact)
+        {
+            var viewModel = new WarehouseDemoViewModel();
+            
             return View("Index", viewModel);
         }
     }
