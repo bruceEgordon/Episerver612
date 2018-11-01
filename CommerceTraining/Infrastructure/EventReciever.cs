@@ -25,10 +25,14 @@ namespace CommerceTraining.Infrastructure
 
         public static void RecordInventoryEvent(object sender, InventoryUpdateEventArgs e)
         {
-            var i = sender.GetType().Name;
-            var e1 = e.ApplicationHasContentModelTypes.ToString();
-            var e2 = e.CatalogKeys.First().CatalogEntryCode;
-            BfEventManager.SendToBF("Inventory", e1 + ":" + e2, i.ToString()); // ...i was too long (max 100)
+            if (e.CatalogKeys.Count() > 0)
+            {
+                var i = sender.GetType().Name;
+                var e1 = e.ApplicationHasContentModelTypes.ToString();
+                var e2 = e.CatalogKeys.First().CatalogEntryCode;
+                BfEventManager.SendToBF("Inventory", e1 + ":" + e2, i.ToString()); // ...i was too long (max 100)
+            }
+
         }
 
         // ...this one is old, have IOrderRepositoryCallback 
