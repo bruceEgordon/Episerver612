@@ -5,4 +5,29 @@
 }
 
 <h2>Inventory Demo</h2>
-
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            @Model.Shirt.DisplayName
+        </div>
+        <div class="col-4">
+            <img src="@Model.ImageUrl" />
+        </div>
+    </div>
+    <h4>Inventory Information</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var inv in Model.Inventories)
+            {
+                <tr>
+                    <th scope="row">inv.</th>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
