@@ -18,15 +18,29 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Name</th>
+                <th scope="col">Warehouse</th>
+                <th scope="col">Is Tracked</th>
+                <th scope="col">Purchase Avl.</th>
+                <th scope="col">Purchase Req.</th>
+                <th scope="col">Backorder Avl.</th>
+                <th scope="col">Backorder Req.</th>
+                <th scope="col">Preorder Avl.</th>
+                <th scope="col">Preorder Req.</th>
             </tr>
         </thead>
         <tbody>
             @foreach(var inv in Model.Inventories)
             {
-                <tr>
-                    <th scope="row">inv.</th>
-                </tr>
+            <tr>
+                <th scope="row">@inv.WarehouseCode</th>
+                <td>@inv.IsTracked</td>
+                <td>@inv.PurchaseAvailableQuantity</td>
+                <td>@inv.PurchaseRequestedQuantity</td>
+                <td>@inv.BackorderAvailableQuantity</td>
+                <td>@inv.BackorderRequestedQuantity</td>
+                <td>@inv.PreorderAvailableQuantity</td>
+                <td>@inv.PreorderRequestedQuantity</td>
+            </tr>
             }
         </tbody>
     </table>
