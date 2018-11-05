@@ -31,13 +31,38 @@ namespace CommerceTraining.Controllers
         public ActionResult Index()
         {
             var viewModel = new InventoryDemoViewModel();
+            ModelFiller(viewModel);
+
+            return View(viewModel);
+        }
+
+        public void ModelFiller(InventoryDemoViewModel viewModel)
+        {
             var shirtRef = _referenceConverter.GetContentLink("Long Sleeve Shirt White Small_1");
             viewModel.Shirt = _contentLoader.Get<ShirtVariation>(shirtRef);
             viewModel.ImageUrl = _assetUrlResolver.GetAssetUrl(viewModel.Shirt);
 
             viewModel.Inventories = _inventoryService.QueryByEntry(new[] { viewModel.Shirt.Code });
+        }
 
-            return View(viewModel);
+        public ActionResult EditInventory(string code, string warehouseCode)
+        {
+            var viewModel = new InventoryDemoViewModel();
+            ModelFiller(viewModel);
+
+            viewModel.SelectedInvRecord = _inventoryService.Get(code, warehouseCode);
+
+            return View("Index", viewModel);
+        }
+
+        public ActionResult UpdateInventory([Bind(Prefix = "SelectedInvRecord")]InventoryRecord inventoryRecord)
+        {
+            _inventoryService.Update(new[] { inventoryRecord });
+
+            var viewModel = new InventoryDemoViewModel();
+            ModelFiller(viewModel);
+
+            return View("Index", viewModel);
         }
     }
 }

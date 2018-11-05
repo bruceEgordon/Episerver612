@@ -14,23 +14,24 @@
             <img src="@Model.ImageUrl" />
         </div>
     </div>
-    <h4>Inventory Information</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Warehouse</th>
-                <th scope="col">Is Tracked</th>
-                <th scope="col">Purchase Avl.</th>
-                <th scope="col">Purchase Req.</th>
-                <th scope="col">Backorder Avl.</th>
-                <th scope="col">Backorder Req.</th>
-                <th scope="col">Preorder Avl.</th>
-                <th scope="col">Preorder Req.</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var inv in Model.Inventories)
-            {
+</div>
+<h4>Inventory Information</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Warehouse</th>
+            <th scope="col">Is Tracked</th>
+            <th scope="col">Purchase Avl.</th>
+            <th scope="col">Purchase Req.</th>
+            <th scope="col">Backorder Avl.</th>
+            <th scope="col">Backorder Req.</th>
+            <th scope="col">Preorder Avl.</th>
+            <th scope="col">Preorder Req.</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inv in Model.Inventories)
+        {
             <tr>
                 <th scope="row">@inv.WarehouseCode</th>
                 <td>@inv.IsTracked</td>
@@ -40,8 +41,91 @@
                 <td>@inv.BackorderRequestedQuantity</td>
                 <td>@inv.PreorderAvailableQuantity</td>
                 <td>@inv.PreorderRequestedQuantity</td>
+                <td>
+                    @Html.ActionLink("Edit", "EditInventory",
+               new { code = inv.CatalogEntryCode, warehouseCode = inv.WarehouseCode })
+                </td>
             </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>
+@if (Model.SelectedInvRecord != null)
+{
+    <h4>Edit Inventory</h4>
+    using (Html.BeginForm("UpdateInventory", "InventoryDemo"))
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <label>Product Code</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.CatalogEntryCode, new { @readonly = "true" })
+                </div>
+                <div class="col-4">
+                    <label>Warehouse Code</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.WarehouseCode, new { @readonly = "true" })
+                </div>
+                <div class="col-4">
+                    <label>Is Tracked</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.IsTracked)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label>Available to Purchase</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.PurchaseAvailableQuantity)
+                </div>
+                <div class="col-4">
+                    <label>Available for Backorder</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.BackorderAvailableQuantity)
+                </div>
+                <div class="col-4">
+                    <label>Available to Preorder</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.PreorderAvailableQuantity)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label>Requested to Purchase</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.PurchaseRequestedQuantity)
+                </div>
+                <div class="col-4">
+                    <label>Requested for Backorder</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.BackorderRequestedQuantity)
+                </div>
+                <div class="col-4">
+                    <label>Requested to Preorder</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.PreorderRequestedQuantity)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label>Date available to purchase</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.PurchaseAvailableUtc)
+                </div>
+                <div class="col-4">
+                    <label>Date available to backorder</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.BackorderAvailableUtc)
+                </div>
+                <div class="col-4">
+                    <label>Date available to preorder</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.PreorderAvailableUtc)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label>Reorder Min. Quantity</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.ReorderMinQuantity)
+                </div>
+                <div class="col-4">
+                    <label>Additional Quantity</label><br />
+                    @Html.EditorFor(m => m.SelectedInvRecord.AdditionalQuantity)
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 30px; margin-bottom: 30px">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-primary" })
+        </div>
+    }
+}
+
