@@ -64,5 +64,35 @@ namespace CommerceTraining.Controllers
 
             return View("Index", viewModel);
         }
+
+        public ActionResult SimulatePurchase(InventoryDemoViewModel viewModel)
+        {
+            var request = new InventoryRequest()
+            {
+                RequestDateUtc = DateTime.UtcNow,
+                Items = new[]
+                {
+                    new InventoryRequestItem
+                    {
+                        RequestType = InventoryRequestType.Purchase,
+                        CatalogEntryCode = "Long Sleeve Shirt White Small_1",
+                        WarehouseCode = viewModel.SelectedWarehouseCode,
+                        Quantity = viewModel.PurchaseQuantity,
+                        ItemIndex = 0, 
+                    }
+                }
+            };
+
+            InventoryResponse resp = _inventoryService.Request(request);
+
+            if (resp.IsSuccess)
+            {
+                viewModel.OperationKey = resp.Items[0].OperationKey;
+            }
+
+            ModelFiller(viewModel);
+
+            return View("Index", viewModel);
+        }
     }
 }

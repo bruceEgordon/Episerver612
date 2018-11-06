@@ -14,5 +14,7 @@ namespace CommerceTraining.Models.ViewModels
         public IEnumerable<InventoryRecord> Inventories { get; set; }
         public InventoryRecord SelectedInvRecord { get; set; }
         public string SelectedWarehouseCode { get; set; }
+        public int PurchaseQuantity { get; set; }
+        public string OperationKey { get; set; }
     }
 }
