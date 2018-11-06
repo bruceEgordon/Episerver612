@@ -13,5 +13,6 @@ namespace CommerceTraining.Models.ViewModels
         public string ImageUrl { get; set; }
         public IEnumerable<InventoryRecord> Inventories { get; set; }
         public InventoryRecord SelectedInvRecord { get; set; }
+        public string SelectedWarehouseCode { get; set; }
     }
 }

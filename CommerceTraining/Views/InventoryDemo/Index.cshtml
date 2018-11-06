@@ -128,4 +128,14 @@
         </div>
     }
 }
+@if(Model.SelectedInvRecord == null)
+{
+    <h4>Purchase Simulator</h4>
+    using (Html.BeginForm("SimulatePurchase", "InventoryDemo"))
+    {
+        <label style="margin-right: 15px">Select a Warehouse</label>
+        @Html.DropDownListFor(m => Model.SelectedWarehouseCode,
+            new SelectList(Model.Inventories, "WarehouseCode", "WarehouseCode"))
+    }
+}
 
