@@ -40,143 +40,170 @@
     {
         <h4>Warehouse Details</h4>
         <div class="container">
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Name</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.Name)
+                    @Html.EditorFor(m => m.SelectedWarehouse.Name,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Code</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.Code)
+                    @Html.EditorFor(m => m.SelectedWarehouse.Code,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Warehouse ID</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.WarehouseId)
+                    @Html.EditorFor(m => m.SelectedWarehouse.WarehouseId,
+                   new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Sort Order</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.SortOrder)
+                    @Html.EditorFor(m => m.SelectedWarehouse.SortOrder,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-        </div>      
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2">
-                    <label>Active</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.IsActive)
+
+            <div class="form-row">
+                <div class="form-check form-check-inline mr-4">
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsActive,
+                           new { htmlAttributes = new { @class = "form-check-input" } })
+                    <label class="form-check-label" for="SelectedWarehouse_IsActive">Active</label>
                 </div>
-                <div class="col-md-2">
-                    <label>Primary</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.IsPrimary)
+                <div class="form-check form-check-inline mr-4">
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsPrimary,
+                           new { htmlAttributes = new { @class = "form-check-input" } })
+                    <label class="form-check-label" for="SelectedWarehouse_IsPrimary">Primary</label>
                 </div>
-                <div class="col-md-2">
-                    <label>Fulfillment Center</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.IsFulfillmentCenter)
+                <div class="form-check form-check-inline mr-4">
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsFulfillmentCenter,
+                           new { htmlAttributes = new { @class = "form-check-input" } })
+                    <label class="form-check-label" for="SelectedWarehouse_IsFulfillmentCenter">Fulfillment Center</label>
                 </div>
-                <div class="col-md-2">
-                    <label>Delivery Location</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.IsDeliveryLocation)
+                <div class="form-check form-check-inline mr-4">
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsDeliveryLocation,
+                           new { htmlAttributes = new { @class = "form-check-input" } })
+                    <label class="form-check-label" for="SelectedWarehouse_IsDeliveryLocation">Delivery Location</label>
                 </div>
-                <div class="col-md-2">
-                    <label>Pickup Location</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.IsPickupLocation)
+                <div class="form-check form-check-inline mr-4">
+                    @Html.EditorFor(m => m.SelectedWarehouse.IsPickupLocation,
+                           new { htmlAttributes = new { @class = "form-check-input" } })
+                    <label class="form-check-label" for="SelectedWarehouse_IsPickupLocation">Pickup Location</label>
                 </div>
             </div>
-            <div class="row"><h6>Contact Information</h6></div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row mt-4"><h6>Contact Information</h6></div>
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>First Name</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.FirstName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.FirstName,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Middle</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.MiddleName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.MiddleName,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Last Name</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.LastName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.LastName,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Organization</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Organization)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Organization,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Line 1</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Line1)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Line1,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Line 2</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Line2)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Line2,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-            </div>             
-            <div class="row">
-                <div class="col-md-2">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>City</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.City)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.City,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>State</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.State)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.State,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Country Code</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.CountryCode)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.CountryCode,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Country Name</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.CountryName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.CountryName,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-                
-            <div class="row">
-                <div class="col-md-2">
+
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Postal Code</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.PostalCode)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.PostalCode,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Region Code</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.RegionCode)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.RegionCode,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Region Name</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.RegionName)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.RegionName,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Day Phone</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.DaytimePhoneNumber)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.DaytimePhoneNumber,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Evening Phone</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.EveningPhoneNumber)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.EveningPhoneNumber,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
-                <div class="col-md-2">
+                <div class="form-group col-2">
                     <label>Fax</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.FaxNumber)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.FaxNumber,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
+            <div class="form-row">
+                <div class="form-group col-2">
                     <label>Email</label>
-                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Email)
+                    @Html.EditorFor(m => m.SelectedWarehouse.ContactInformation.Email,
+                   new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
-        </div>
-        <div style="margin-top: 30px; margin-bottom: 30px">
-            @Html.Hidden("isNew", Model.IsNew)
-            <input type="submit" value="Submit" class="btn btn-primary" />
-            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-primary" })
+            <div class="form-row">
+                <div class="form-group">
+                    @Html.Hidden("isNew", Model.IsNew)
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+            </div>
         </div>
     }
 }

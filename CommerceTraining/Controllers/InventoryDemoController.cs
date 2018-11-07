@@ -87,9 +87,64 @@ namespace CommerceTraining.Controllers
 
             if (resp.IsSuccess)
             {
-                viewModel.OperationKey = resp.Items[0].OperationKey;
+                viewModel.OperationKeys = new List<string>();
+                foreach(var item in resp.Items)
+                {
+                    viewModel.OperationKeys.Add(item.OperationKey);
+                } 
+            }
+            else if (resp.Items[0].ResponseType == InventoryResponseType.NotEnough)
+            {
+                viewModel.MessageOutput = "Not enough inventory for the request!";
             }
 
+            ModelFiller(viewModel);
+
+            return View("Index", viewModel);
+        }
+
+        public ActionResult CompletePurchase(InventoryDemoViewModel viewModel)
+        {
+            var itemIndexStart = 0;
+            var response = _inventoryService.Request(new InventoryRequest()
+            {
+                RequestDateUtc = DateTime.UtcNow,
+                Items = viewModel.OperationKeys.Select(x =>
+                    new InventoryRequestItem
+                    {
+                        RequestType = InventoryRequestType.Complete,
+                        ItemIndex = itemIndexStart++,
+                        OperationKey = x
+                    }).ToList()
+            });
+            if (response.IsSuccess)
+            {
+                viewModel.OperationKeys = null;
+            }
+           
+            ModelFiller(viewModel);
+
+            return View("Index", viewModel);
+        }
+
+        public ActionResult CancelPurchase(InventoryDemoViewModel viewModel)
+        {
+            var itemIndexStart = 0;
+            var response = _inventoryService.Request(new InventoryRequest()
+            {
+                RequestDateUtc = DateTime.UtcNow,
+                Items = viewModel.OperationKeys.Select(x =>
+                    new InventoryRequestItem
+                    {
+                        RequestType = InventoryRequestType.Cancel,
+                        ItemIndex = itemIndexStart++,
+                        OperationKey = x
+                    }).ToList()
+            });
+            if (response.IsSuccess)
+            {
+                viewModel.OperationKeys = null;
+            }
             ModelFiller(viewModel);
 
             return View("Index", viewModel);

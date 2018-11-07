@@ -152,32 +152,55 @@
     <h4>Purchase Simulator</h4>
     using (Html.BeginForm("SimulatePurchase", "InventoryDemo"))
     {
-    <div class="container">
-        <label style="margin-right: 15px">Select a Warehouse</label>
-        @Html.DropDownListFor(m => m.SelectedWarehouseCode,
-            new SelectList(Model.Inventories, "WarehouseCode", "WarehouseCode"))
-
-
-        <div class="row">
-            <div class="col-4">
-                <label>Enter Quantity</label><br />
-                @Html.EditorFor(m => m.PurchaseQuantity)
+        <div class="container">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Select a Warehouse</label>
+                    @Html.DropDownListFor(m => m.SelectedWarehouseCode,
+                        new SelectList(Model.Inventories, "WarehouseCode", "WarehouseCode"),
+                        new { @class = "form-control" })
+                </div>
             </div>
-        </div>
+            <div class="form-row">
+                <div class="form-group col-2">
+                    <label>Enter Quantity</label>
+                    @Html.EditorFor(m => m.PurchaseQuantity,
+                       new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
 
-        if (!String.IsNullOrEmpty(Model.OperationKey))
-        {
-        <div class="form-group">
-            <label>Operation Key (Normally stored with a Shipment)</label>
-            @Html.EditorFor(m => m.OperationKey,
-           new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @if (Model.OperationKeys != null && Model.OperationKeys.Count > 0)
+            {
+                for (var i = 0; i < Model.OperationKeys.Count; i++)
+                {
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label>Operation Key (Normally stored with a Shipment)</label>
+                            @Html.EditorFor(m => m.OperationKeys[i],
+                                 new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </div>
+                    </div>
+                }
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="submit" value="Complete Purchase" formaction=@Url.Action("CompletePurchase") class="btn btn-primary" />
+                        <input type="submit" value="Cancel Purchase" formaction=@Url.Action("CancelPurchase") class="btn btn-primary" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="submit" value="Purchase" class="btn btn-primary" />
+                        @if (!String.IsNullOrEmpty(Model.MessageOutput))
+                        {
+                            <label>@Model.MessageOutput</label>
+                        }
+                    </div>
+                </div>
+            }
         </div>
-        }
-
-        <div style="margin-top: 30px; margin-bottom: 30px">
-            <input type="submit" value="Submit" class="btn btn-primary" />
-        </div>
-    </div>
     }
 }
 
