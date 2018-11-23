@@ -1,0 +1,12 @@
+﻿@model CommerceTraining.Models.ViewModels.BisFoundViewModel
+
+@{
+    ViewBag.Title = "BisFundDemo";
+}
+
+<h2>Business Foundation Demo</h2>
+<div class="border-info">
+    <p>If the button is disabled, the Meta Class already exists.</p>
+    @Html.ActionLink("Create ClubCard MetaClass", "CreateClubCard", null, Model.ClubCardExists ?
+    new { @class = "btn btn-primary disabled"} : new { @class = "btn btn-primary" })
+</div>
