@@ -8,5 +8,6 @@ namespace CommerceTraining.Models.ViewModels
     public class BisFoundViewModel
     {
         public Boolean ClubCardExists { get; set; }
+        public string ViewMessage { get; set; }
     }
 }

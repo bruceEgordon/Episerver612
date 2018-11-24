@@ -9,4 +9,7 @@
     <p>If the button is disabled, the Meta Class already exists.</p>
     @Html.ActionLink("Create ClubCard MetaClass", "CreateClubCard", null, Model.ClubCardExists ?
     new { @class = "btn btn-primary disabled"} : new { @class = "btn btn-primary" })
+    @Html.ActionLink("Delete ClubCard MetaClass", "DeleteClubCard", null, Model.ClubCardExists ?
+    new { @class = "btn btn-primary"} : new { @class = "btn btn-primary disabled" })
 </div>
+<p>@Model.ViewMessage</p>
