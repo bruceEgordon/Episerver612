@@ -6,10 +6,78 @@
 
 <h2>Business Foundation Demo</h2>
 <div class="border-info">
-    <p>If the button is disabled, the Meta Class already exists.</p>
-    @Html.ActionLink("Create ClubCard MetaClass", "CreateClubCard", null, Model.ClubCardExists ?
+    <p>@(Model.ClubCardExists ? "Club Card exists" : "Club Card doesn't exist.")</p>
+    @Html.ActionLink("Create ClubCard MetaClass", "CreateClubCardClass", null, Model.ClubCardExists ?
     new { @class = "btn btn-primary disabled"} : new { @class = "btn btn-primary" })
-    @Html.ActionLink("Delete ClubCard MetaClass", "DeleteClubCard", null, Model.ClubCardExists ?
+    @Html.ActionLink("Delete ClubCard MetaClass", "DeleteClubCardClass", null, Model.ClubCardExists ?
     new { @class = "btn btn-primary"} : new { @class = "btn btn-primary disabled" })
 </div>
-<p>@Model.ViewMessage</p>
+@if (Model.ClubCardExists)
+{
+    <h4>Club Cards</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col">Title</th>
+                <th class="col">Card Owner</th>
+                <th class="col">Email</th>
+                <th class="col">Balance</th>
+                <th class="col">Card Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ClubCards)
+            {
+                <tr class="row">
+                    <th scope="row">@item["TitleField"]</th>
+                    <td>@item["CardOwnerName"]</td>
+                    <td>@item["Email"]</td>
+                    <td>@item["Balance"]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        @Html.ActionLink("Add New", "NewCard")
+    </div>
+    if(Model.SelectedCard != null)
+    {
+        <h4>Card Details</h4>
+        using(Html.BeginForm("SubmitCard", "BisFound"))
+        {
+        <div class="container">
+            <div class="form-row">
+                <div class="form-group col-2">
+                    <label>Card Owner Name</label>
+                    @Html.TextBoxFor(m => m.SelectedCard["CardOwnerName"],
+                        new { @class = "form-control" })
+                </div>
+                <div class="form-group col-2">
+                    <label>Email</label>
+                    @Html.TextBoxFor(m => m.SelectedCard["Email"],
+                        new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-2">
+                    <label>Title</label>
+                    @Html.TextBoxFor(m => m.SelectedCard["TitleField"],
+                        new { @class = "form-control" })
+                </div>
+                <div class="form-group col-2">
+                    <label>Balance</label>
+                    @Html.TextBoxFor(m => m.SelectedCard["Balance"],
+                        new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    @Html.Hidden("isNew", Model.IsNew)
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+        }
+    }
+}

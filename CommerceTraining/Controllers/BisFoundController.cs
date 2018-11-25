@@ -1,6 +1,7 @@
 ﻿using CommerceTraining.Models.ViewModels;
 using Mediachase.BusinessFoundation.Core;
 using Mediachase.BusinessFoundation.Data;
+using Mediachase.BusinessFoundation.Data.Business;
 using Mediachase.BusinessFoundation.Data.Meta.Management;
 using System;
 using System.Collections.Generic;
@@ -16,22 +17,21 @@ namespace CommerceTraining.Controllers
         public ActionResult Index()
         {
             var viewModel = new BisFoundViewModel();
-            if(DataContext.Current.MetaModel.MetaClasses["ClubCard"] != null)
-            {
-                viewModel.ClubCardExists = true;
-            }
-
-            if (DataContext.Current.MetaModel.RegisteredTypes["CardType"] != null)
-            {
-                viewModel.ViewMessage = "The CardType exists!";
-                MetaFieldType mf = DataContext.Current.MetaModel.RegisteredTypes["CardType"];
-                if (MetaEnum.IsUsed(mf)) viewModel.ViewMessage += " And its in use!";
-            }
+            FillModel(viewModel);
 
             return View(viewModel);
         }
 
-        public ActionResult CreateClubCard()
+        public void FillModel(BisFoundViewModel viewModel)
+        {
+            if (DataContext.Current.MetaModel.MetaClasses["ClubCard"] != null)
+            {
+                viewModel.ClubCardExists = true;
+                viewModel.ClubCards = BusinessManager.List("ClubCard", new[] { new SortingElement("Email", SortingElementType.Desc )});
+            }
+        }
+
+        public ActionResult CreateClubCardClass()
         {
             var viewModel = new BisFoundViewModel();
 
@@ -80,7 +80,7 @@ namespace CommerceTraining.Controllers
             return View("Index", viewModel);
         }
 
-        public ActionResult DeleteClubCard()
+        public ActionResult DeleteClubCardClass()
         {
             var viewModel = new BisFoundViewModel();
 
@@ -91,6 +91,27 @@ namespace CommerceTraining.Controllers
                 MetaEnum.Remove(cardEnum);
             }
 
+            return View("Index", viewModel);
+        }
+
+        public ActionResult NewCard()
+        {
+            var viewModel = new BisFoundViewModel();
+            FillModel(viewModel);
+            viewModel.SelectedCard = new EntityObject("ClubCard");
+            return View("Index", viewModel);
+        }
+
+        public ActionResult SubmitCard([Bind(Prefix = "SelectedCard")]EntityObject Card)
+        {
+            var viewModel = new BisFoundViewModel();
+            //EntityObject card = BusinessManager.InitializeEntity("ClubCard");
+            //card["TitleField"] = TitleField;
+            //card["CardOwnerName"] = CardOwnerName;
+            //card["Email"] = Email;
+            //card["Balance"] = Balance;
+            //BusinessManager.Create(card);
+            FillModel(viewModel);
             return View("Index", viewModel);
         }
     }
