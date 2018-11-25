@@ -1,4 +1,7 @@
-﻿using Mediachase.BusinessFoundation.Data.Business;
+﻿using Mediachase.BusinessFoundation.Data;
+using Mediachase.BusinessFoundation.Data.Business;
+using Mediachase.BusinessFoundation.Data.Meta;
+using Mediachase.Commerce.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +14,19 @@ namespace CommerceTraining.Models.ViewModels
         public Boolean ClubCardExists { get; set; }
         public string ViewMessage { get; set; }
         public IEnumerable<EntityObject> ClubCards { get; set; }
-        public EntityObject SelectedCard { get; set; }
+        public ClubCard SelectedCard { get; set; }
+        public IEnumerable<ContactEntity> ContactList { get; set; }
+        public IEnumerable<MetaEnumItem> CardTypeList { get; set; }
         public bool IsNew { get; set; }
+    }
+
+    public class ClubCard
+    {
+        public string TitleField { get; set; }
+        public string CardOwnerName { get; set; }
+        public string Email { get; set; }
+        public int Balance { get; set; }
+        public int CardType { get; set; }
+        public Guid ContactId { get; set; }
     }
 }

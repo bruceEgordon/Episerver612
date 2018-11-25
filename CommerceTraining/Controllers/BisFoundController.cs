@@ -3,6 +3,7 @@ using Mediachase.BusinessFoundation.Core;
 using Mediachase.BusinessFoundation.Data;
 using Mediachase.BusinessFoundation.Data.Business;
 using Mediachase.BusinessFoundation.Data.Meta.Management;
+using Mediachase.Commerce.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,20 +99,40 @@ namespace CommerceTraining.Controllers
         {
             var viewModel = new BisFoundViewModel();
             FillModel(viewModel);
-            viewModel.SelectedCard = new EntityObject("ClubCard");
+            viewModel.IsNew = true;
+            viewModel.SelectedCard = new ClubCard();
+            viewModel.ContactList = CustomerContext.Current.GetContacts();
+            MetaFieldType cardEnum = DataContext.Current.MetaModel.RegisteredTypes["CardType"];
+            viewModel.CardTypeList = cardEnum.EnumItems;
             return View("Index", viewModel);
         }
 
-        public ActionResult SubmitCard([Bind(Prefix = "SelectedCard")]EntityObject Card)
+        public ActionResult SubmitCard([Bind(Prefix = "SelectedCard")]ClubCard clubCard)
         {
             var viewModel = new BisFoundViewModel();
-            //EntityObject card = BusinessManager.InitializeEntity("ClubCard");
-            //card["TitleField"] = TitleField;
-            //card["CardOwnerName"] = CardOwnerName;
-            //card["Email"] = Email;
-            //card["Balance"] = Balance;
-            //BusinessManager.Create(card);
+            EntityObject card = BusinessManager.InitializeEntity("ClubCard");
+            card["TitleField"] = clubCard.TitleField;
+            card["CardOwnerName"] = clubCard.CardOwnerName;
+            card["Email"] = clubCard.Email;
+            card["Balance"] = clubCard.Balance;
+            card["ContactRefId"] = (PrimaryKeyId)clubCard.ContactId;
+            card["CardTypeEnum"] = clubCard.CardType;
+            BusinessManager.Create(card);
+
             FillModel(viewModel);
+            return View("Index", viewModel);
+        }
+
+        public ActionResult EditCard(int CardId)
+        {
+            var viewModel = new BisFoundViewModel();
+            FillModel(viewModel);
+            viewModel.IsNew = false;
+            EntityObject card = BusinessManager.Load("ClubCard", (PrimaryKeyId)CardId);
+            viewModel.SelectedCard = new ClubCard();
+            viewModel.ContactList = CustomerContext.Current.GetContacts();
+            MetaFieldType cardEnum = DataContext.Current.MetaModel.RegisteredTypes["CardType"];
+            viewModel.CardTypeList = cardEnum.EnumItems;
             return View("Index", viewModel);
         }
     }
