@@ -22,6 +22,7 @@ namespace CommerceTraining.Models.ViewModels
 
     public class ClubCard
     {
+        public int CardId { get; set; }
         public string TitleField { get; set; }
         public string CardOwnerName { get; set; }
         public string Email { get; set; }

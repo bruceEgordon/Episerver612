@@ -18,27 +18,31 @@
     <table class="table">
         <thead>
             <tr>
-                <th class="col">Title</th>
-                <th class="col">Primary Key Id</th>
-                <th class="col">Card Owner</th>
-                <th class="col">Email</th>
-                <th class="col">Contact Id</th>
-                <th class="col">Balance</th>
-                <th class="col">Card Type</th>
+                <th scope="col">Title</th>
+                <th scope="col">Primary Key Id</th>
+                <th scope="col">Card Owner</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contact Id</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Card Type</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.ClubCards)
             {
-                <tr>
-                    <th scope="row">@item["TitleField"]</th>
-                    <td>@item.PrimaryKeyId</td>
-                    <td>@item["CardOwnerName"]</td>
-                    <td>@item["Email"]</td>
-                    <td>@item["ContactRefId"]</td>
-                    <td>@item["Balance"]</td>
-                    <td>@item["CardTypeEnum"]</td>
-                </tr>
+            <tr>
+                <th scope="row">@item["TitleField"]</th>
+                <td>@item.PrimaryKeyId</td>
+                <td>@item["CardOwnerName"]</td>
+                <td>@item["Email"]</td>
+                <td>@item["ContactRefId"]</td>
+                <td>@item["Balance"]</td>
+                <td>@item["CardTypeEnum"]</td>
+                <td>
+                    @Html.ActionLink("Edit", "EditCard", new { CardId = item.PrimaryKeyId })
+                    | @Html.ActionLink("Delete", "DeleteCard", new { CardId = item.PrimaryKeyId })
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -51,6 +55,13 @@
         using(Html.BeginForm("SubmitCard", "BisFound"))
         {
         <div class="container">
+            <div class="form-row">
+                <div class="form-group col-2">
+                    <label>Card Id</label>
+                    @Html.EditorFor(m => m.SelectedCard.CardId,
+                   new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
             <div class="form-row">
                 <div class="form-group col-2">
                     <label>Select a Contact</label>

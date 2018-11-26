@@ -76,7 +76,7 @@ namespace CommerceTraining.Controllers
                 MetaDataWrapper.CreateReference("Contact", "ClubCard", "ContactRef", "Contact References", false, "InfoBlock", "ClubCard", "10");
             }
 
-            viewModel.ClubCardExists = true;
+            FillModel(viewModel);
 
             return View("Index", viewModel);
         }
@@ -99,26 +99,40 @@ namespace CommerceTraining.Controllers
         {
             var viewModel = new BisFoundViewModel();
             FillModel(viewModel);
+            FillFormLists(viewModel);
             viewModel.IsNew = true;
-            viewModel.SelectedCard = new ClubCard();
-            viewModel.ContactList = CustomerContext.Current.GetContacts();
-            MetaFieldType cardEnum = DataContext.Current.MetaModel.RegisteredTypes["CardType"];
-            viewModel.CardTypeList = cardEnum.EnumItems;
             return View("Index", viewModel);
         }
 
-        public ActionResult SubmitCard([Bind(Prefix = "SelectedCard")]ClubCard clubCard)
+        public ActionResult SubmitCard([Bind(Prefix = "SelectedCard")]ClubCard clubCard, bool IsNew)
         {
-            var viewModel = new BisFoundViewModel();
-            EntityObject card = BusinessManager.InitializeEntity("ClubCard");
+            EntityObject card;
+            if (IsNew)
+            {
+                card = BusinessManager.InitializeEntity("ClubCard");
+            }
+            else
+            {
+                card = BusinessManager.Load("ClubCard", clubCard.CardId);
+            }
+            
             card["TitleField"] = clubCard.TitleField;
             card["CardOwnerName"] = clubCard.CardOwnerName;
             card["Email"] = clubCard.Email;
             card["Balance"] = clubCard.Balance;
             card["ContactRefId"] = (PrimaryKeyId)clubCard.ContactId;
             card["CardTypeEnum"] = clubCard.CardType;
-            BusinessManager.Create(card);
 
+            if (IsNew)
+            {
+                BusinessManager.Create(card);
+            }
+            else
+            {
+                BusinessManager.Update(card);
+            }
+
+            var viewModel = new BisFoundViewModel();
             FillModel(viewModel);
             return View("Index", viewModel);
         }
@@ -127,13 +141,33 @@ namespace CommerceTraining.Controllers
         {
             var viewModel = new BisFoundViewModel();
             FillModel(viewModel);
+            FillFormLists(viewModel);
             viewModel.IsNew = false;
-            EntityObject card = BusinessManager.Load("ClubCard", (PrimaryKeyId)CardId);
+            EntityObject card = BusinessManager.Load("ClubCard", CardId);
+            viewModel.SelectedCard.CardId = CardId;
+            viewModel.SelectedCard.TitleField = (string)card["TitleField"];
+            viewModel.SelectedCard.CardOwnerName = (string)card["CardOwnerName"];
+            viewModel.SelectedCard.Email = (string)card["Email"];
+            viewModel.SelectedCard.Balance = (int)card["Balance"];
+            viewModel.SelectedCard.ContactId = (PrimaryKeyId)card["ContactRefId"];
+            viewModel.SelectedCard.CardType = (int)card["CardTypeEnum"];
+            return View("Index", viewModel);
+        }
+
+        public ActionResult DeleteCard(int CardId)
+        {
+            BusinessManager.Delete("ClubCard", CardId);
+            var viewModel = new BisFoundViewModel();
+            FillModel(viewModel);
+            return View("Index", viewModel);
+        }
+
+        public void FillFormLists(BisFoundViewModel viewModel)
+        {
             viewModel.SelectedCard = new ClubCard();
             viewModel.ContactList = CustomerContext.Current.GetContacts();
             MetaFieldType cardEnum = DataContext.Current.MetaModel.RegisteredTypes["CardType"];
             viewModel.CardTypeList = cardEnum.EnumItems;
-            return View("Index", viewModel);
         }
     }
 }
