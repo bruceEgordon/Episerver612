@@ -12,7 +12,6 @@ namespace CommerceTraining.Models.ViewModels
     public class BisFoundViewModel
     {
         public Boolean ClubCardExists { get; set; }
-        public string ViewMessage { get; set; }
         public IEnumerable<EntityObject> ClubCards { get; set; }
         public ClubCard SelectedCard { get; set; }
         public IEnumerable<ContactEntity> ContactList { get; set; }

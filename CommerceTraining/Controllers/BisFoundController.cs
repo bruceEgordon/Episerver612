@@ -143,6 +143,7 @@ namespace CommerceTraining.Controllers
             FillModel(viewModel);
             FillFormLists(viewModel);
             viewModel.IsNew = false;
+
             EntityObject card = BusinessManager.Load("ClubCard", CardId);
             viewModel.SelectedCard.CardId = CardId;
             viewModel.SelectedCard.TitleField = (string)card["TitleField"];
@@ -151,12 +152,14 @@ namespace CommerceTraining.Controllers
             viewModel.SelectedCard.Balance = (int)card["Balance"];
             viewModel.SelectedCard.ContactId = (PrimaryKeyId)card["ContactRefId"];
             viewModel.SelectedCard.CardType = (int)card["CardTypeEnum"];
+
             return View("Index", viewModel);
         }
 
         public ActionResult DeleteCard(int CardId)
         {
             BusinessManager.Delete("ClubCard", CardId);
+
             var viewModel = new BisFoundViewModel();
             FillModel(viewModel);
             return View("Index", viewModel);
