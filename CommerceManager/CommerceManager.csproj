@@ -280,7 +280,9 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Configs\baf.config" />
-    <Content Include="Configs\baf.data.manager.config" />
+    <Content Include="Configs\baf.data.manager.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Configs\baf.data.metaobject.config">
       <SubType>Designer</SubType>
     </Content>
@@ -309,6 +311,12 @@
     <Compile Include="IndexBuilder.cs" />
     <Compile Include="IndexMoreProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomBfHandler\CustomBfHandler.csproj">
+      <Project>{4597b470-c38d-4983-b9fe-4fb7abf4855a}</Project>
+      <Name>CustomBfHandler</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
