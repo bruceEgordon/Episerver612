@@ -467,6 +467,8 @@
     <Compile Include="Infrastructure\Promotions\CustomPromotionEngineContentLoader.cs" />
     <Compile Include="Infrastructure\Promotions\Free2.cs" />
     <Compile Include="Infrastructure\Promotions\FreeItemPromotionProcessor.cs" />
+    <Compile Include="Infrastructure\Promotions\FreeStuffPromotion.cs" />
+    <Compile Include="Infrastructure\Promotions\FreeStuffPromotionProcessor.cs" />
     <Compile Include="Infrastructure\Promotions\MyPercentagePromotionProcessor.cs" />
     <Compile Include="Infrastructure\Promotions\MyPromotionGroupNames.cs" />
     <Compile Include="Infrastructure\RemoveMeWhenCleaningUp.cs" />
