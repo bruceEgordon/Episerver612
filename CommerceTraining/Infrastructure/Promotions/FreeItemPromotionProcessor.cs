@@ -116,7 +116,7 @@ namespace CommerceTraining.Infrastructure.Promotions
                 // ...the method sits on the PriceMatrix
                 var affectedEntries = context.EntryPrices.ExtractEntries(
                     skuCodes
-                    , 1);
+                    , 1, promotionData);
 
                 if (affectedEntries == null)
                 {

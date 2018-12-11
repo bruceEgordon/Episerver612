@@ -85,9 +85,11 @@ namespace CommerceTraining.Controllers
                 // RoCe: improve the message part
                 otherMessages.Add(ccService.FrontEndMessage); // frontEndMessage is about the GiftCard
 
+                var msg = cart.ApplyDiscounts();
                 // added for the suspenders shipping (...cheaper with traditional mail service)
                 //if ((bool)cart.Properties["SpecialShip"]) // SpecialShip is set in Trousers-Controller
-                if(ccService.CheckOnLineItems(cart))
+
+                if (ccService.CheckOnLineItems(cart))
                 {
                     otherMessages.Add("Note that one or more item(s) require separate shipment");
                     otherMessages.Add(CheckShipping(cart)); // starting to investigate restrictions for SKU-shipping
@@ -164,7 +166,7 @@ namespace CommerceTraining.Controllers
                     Messages = warningMessages + " - " + messageString,// + CheckShipping(cart), // added the method
                     PromotionMessages = base.GetPromotions(cart)
                 };
-
+                
                 _orderRepository.Save(cart);
 
                 return View("index", model);
