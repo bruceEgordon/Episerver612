@@ -199,11 +199,11 @@ namespace CommerceTraining.Infrastructure
         {
             DependencyResolver.SetResolver(new StructureMapDependencyResolver(context.StructureMap()));
 
-            context.Services.AddSingleton<IPriceOptimizer, DemoPriceOptimizer>();
+            //context.Services.AddSingleton<IPriceOptimizer, DemoPriceOptimizer>();
 
-            context.Services.AddSingleton<IPriceService, MyPriceService>();
+            //context.Services.AddSingleton<IPriceService, MyPriceService>();
 
-            context.Services.AddSingleton<PromotionEngineContentLoader, CustomPromotionEngineContentLoader>();
+            //context.Services.AddSingleton<PromotionEngineContentLoader, CustomPromotionEngineContentLoader>();
            
         }
     }

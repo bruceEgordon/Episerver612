@@ -20,5 +20,6 @@ namespace CommerceTraining.Infrastructure.Promotions
         [PromotionRegion(PromotionRegionName.Reward)]
         [Display(Order = 30)]
         public virtual DiscountItems FreeItem { get; set; }
+
     }
 }

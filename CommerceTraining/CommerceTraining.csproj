@@ -417,6 +417,7 @@
     <Compile Include="Controllers\CatalogRoutingStartController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\DemoPromoController.cs" />
     <Compile Include="Controllers\FindSearchDemoController.cs" />
     <Compile Include="Controllers\FindUnifiedController.cs" />
     <Compile Include="Controllers\CatalogControllerBase.cs" />
@@ -518,6 +519,7 @@
     <Compile Include="Models\ViewModels\CatalogViewModel.cs" />
     <Compile Include="Models\ViewModels\CheckOutViewModel.cs" />
     <Compile Include="Models\ViewModels\DemoMarketsViewModel.cs" />
+    <Compile Include="Models\ViewModels\DemoPromoViewModel.cs" />
     <Compile Include="Models\ViewModels\FindResultViewModel.cs" />
     <Compile Include="Models\ViewModels\FindUnifiedViewModel.cs" />
     <Compile Include="Models\ViewModels\InventoryDemoViewModel.cs" />
@@ -697,6 +699,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\InventoryDemo\Index.cshtml" />
     <Content Include="Views\BisFound\Index.cshtml" />
+    <Content Include="Views\DemoPromo\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

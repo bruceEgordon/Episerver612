@@ -1,0 +1,20 @@
+﻿@model CommerceTraining.Models.ViewModels.DemoPromoViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Promotions Demo</h2>
+<ul>
+    @foreach(var reward in Model.Rewards)
+    {
+        <li>@reward.Description</li>
+    }
+</ul>
+<ul>
+    @foreach (var item in Model.InMemCart.Forms.FirstOrDefault().Shipments.FirstOrDefault().LineItems)
+    {
+        <li>@item.Code</li>
+    }
+</ul>
+

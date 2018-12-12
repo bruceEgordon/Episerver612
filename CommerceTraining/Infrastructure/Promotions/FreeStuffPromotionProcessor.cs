@@ -39,16 +39,13 @@ namespace CommerceTraining.Infrastructure.Promotions
             var condition = promotionData.RequiredQty;
 
             var lineItems = context.OrderForm.GetAllLineItems(); //GetAllLineItems extension method needs using for EPiServer.Commerce.Order
-            //var lineItems = GetLineItems(context.OrderForm);
 
             IList<string> skuCodes = _collectionTargetEvaluator.GetApplicableCodes(lineItems,
                 condition.Items, promotionData.FreeItem.MatchRecursive);
 
             FulfillmentStatus status = promotionData.RequiredQty.GetFulfillmentStatus(context.OrderForm, _collectionTargetEvaluator, _fulfillmentEvaluator);
-            //FulfillmentStatus status = _fulfillmentEvaluator.GetStatusForBuyQuantityPromotion(skuCodes,
-              //  lineItems, condition.RequiredQuantity, condition.PartiallyFulfilledThreshold);
 
-            return RewardDescription.CreateFreeItemReward(status, GetRedemptions(promotionData, context, skuCodes),
+            return RewardDescription.CreateGiftItemsReward(status, GetRedemptions(promotionData, context, skuCodes),
                 promotionData, status.GetRewardDescriptionText());
         }
 
