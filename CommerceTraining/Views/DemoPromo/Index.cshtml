@@ -11,10 +11,18 @@
         <li>@reward.Description</li>
     }
 </ul>
+<h2>Added Items</h2>
 <ul>
     @foreach (var item in Model.InMemCart.Forms.FirstOrDefault().Shipments.FirstOrDefault().LineItems)
     {
         <li>@item.Code</li>
+    }
+</ul>
+<h2>Promotion Items</h2>
+<ul>
+    @foreach(var item in Model.InMemCart.Forms.First().Promotions.First().Entries)
+    {
+        <li>@item.EntryCode</li>
     }
 </ul>
 

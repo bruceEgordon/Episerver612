@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using EPiServer.Commerce.Marketing;
 using EPiServer.Commerce.Marketing.DataAnnotations;
@@ -19,7 +20,7 @@ namespace CommerceTraining.Infrastructure.Promotions
 
         [PromotionRegion(PromotionRegionName.Reward)]
         [Display(Order = 30)]
-        public virtual DiscountItems FreeItem { get; set; }
+        public virtual IList<ContentReference> FreeItem { get; set; }
 
     }
 }
