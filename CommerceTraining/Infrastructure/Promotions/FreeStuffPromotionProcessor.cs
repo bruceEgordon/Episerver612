@@ -1,10 +1,7 @@
 ﻿using EPiServer;
-using EPiServer.Commerce.Extensions;
 using EPiServer.Commerce.Marketing;
 using EPiServer.Commerce.Marketing.Extensions;
-using EPiServer.Commerce.Marketing.Promotions;
 using EPiServer.Commerce.Order;
-using EPiServer.Core;
 using EPiServer.Framework.Localization;
 using Mediachase.Commerce.Catalog;
 using System;
@@ -23,9 +20,14 @@ namespace CommerceTraining.Infrastructure.Promotions
         private IContentLoader _contentLoader;
         private ReferenceConverter _referenceConverter;
 
-        public FreeStuffPromotionProcessor(CollectionTargetEvaluator collectionTargetEvaluator, FulfillmentEvaluator fulfillmentEvaluator,
-            LocalizationService localizationService, IContentLoader contentLoader, ReferenceConverter referenceConverter,
-            RedemptionDescriptionFactory redemptionDescriptionFactory, GiftItemFactory giftItemFactory) : base(redemptionDescriptionFactory)
+        public FreeStuffPromotionProcessor(RedemptionDescriptionFactory redemptionDescriptionFactory,
+            CollectionTargetEvaluator collectionTargetEvaluator,
+            FulfillmentEvaluator fulfillmentEvaluator,
+            LocalizationService localizationService,
+            GiftItemFactory giftItemFactory,
+            IContentLoader contentLoader,
+            ReferenceConverter referenceConverter
+            ) : base(redemptionDescriptionFactory)
         {
             _collectionTargetEvaluator = collectionTargetEvaluator;
             _fulfillmentEvaluator = fulfillmentEvaluator;
@@ -36,24 +38,61 @@ namespace CommerceTraining.Infrastructure.Promotions
         }
         protected override RewardDescription Evaluate(FreeStuffPromotion promotionData, PromotionProcessorContext context)
         {
-            //ContentReference freeItem = promotionData.FreeItem.Items.First();
-            //string freeItemCode = _referenceConverter.GetCode(freeItem);
             var condition = promotionData.RequiredQty;
 
-            var lineItems = context.OrderForm.GetAllLineItems(); //GetAllLineItems extension method needs using for EPiServer.Commerce.Order
+            var lineItems = context.OrderForm.GetAllLineItems();
 
             IList<string> skuCodes = _collectionTargetEvaluator.GetApplicableCodes(lineItems,
                 condition.Items, false);
 
-            FulfillmentStatus status = promotionData.RequiredQty.GetFulfillmentStatus(context.OrderForm, _collectionTargetEvaluator, _fulfillmentEvaluator);
+            FulfillmentStatus status = promotionData.RequiredQty
+                .GetFulfillmentStatus(context.OrderForm, _collectionTargetEvaluator, _fulfillmentEvaluator);
+
             List<RedemptionDescription> redemptions = new List<RedemptionDescription>();
+
             if(status == FulfillmentStatus.Fulfilled)
             {
                 AffectedEntries entries = _giftItemFactory.CreateGiftItems(promotionData.FreeItem, context);
                 redemptions.Add(CreateRedemptionDescription(entries));
             }
+
             return RewardDescription.CreateGiftItemsReward(status, redemptions,
-                promotionData, status.GetRewardDescriptionText());
+                promotionData, CreateCustomRewardDescriptionText(status, promotionData));
+        }
+
+        protected virtual string CreateCustomRewardDescriptionText(FulfillmentStatus fulfillmentStatus,
+            FreeStuffPromotion promotionData)
+        {
+            string freeItemCode = _referenceConverter.GetCode(promotionData.FreeItem[0]);
+
+            if(fulfillmentStatus == FulfillmentStatus.PartiallyFulfilled)
+            {
+                List<string> codes = new List<string>();
+                int numItems = promotionData.RequiredQty.Items.Count;
+                foreach (var item in promotionData.RequiredQty.Items)
+                {
+                    codes.Add(_referenceConverter.GetCode(item));
+                    
+                }
+                return $"Buy at least {promotionData.RequiredQty.RequiredQuantity} " +
+                    $"of {string.Join(",", codes)} and get a free {freeItemCode}!";
+            }
+            if(fulfillmentStatus == FulfillmentStatus.Fulfilled)
+            {
+                return $"Congratulations! You get a free {freeItemCode}";
+            }
+            return "This promotion is not applicable for the current order.";
+        }
+        protected override bool CanBeFulfilled(FreeStuffPromotion promotionData, PromotionProcessorContext context)
+        {
+            if (DateTime.Now.DayOfWeek != DayOfWeek.Sunday)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         protected override PromotionItems GetPromotionItems(FreeStuffPromotion promotionData)

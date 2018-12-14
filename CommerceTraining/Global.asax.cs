@@ -23,6 +23,7 @@ namespace CommerceTraining
             routes.MapRoute("WareHouseDemoRoute", "warehousedemo/{action}", new { controller = "WareHouseDemo", action = "Index" });
             routes.MapRoute("InventoryDemoRoute", "inventorydemo/{action}", new { controller = "InventoryDemo", action = "Index" });
             routes.MapRoute("BisFoundDemoRoute", "bisfound/{action}", new { controller = "BisFound", action = "Index" });
+            routes.MapRoute("PromDemoRoute", "demopromo/{action}", new { controller = "DemoPromo", action = "Index" });
             routes.MapRoute("ClassDemos", "classDemos/{controller}/{action}", new { action = "Index" });
         }
     }

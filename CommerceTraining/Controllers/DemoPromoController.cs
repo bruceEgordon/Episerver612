@@ -28,27 +28,50 @@ namespace CommerceTraining.Controllers
         public ActionResult Index()
         {
             var viewModel = new DemoPromoViewModel();
-            var market = _currentMarket.GetCurrentMarket();
-            //var items = new List<ContentReference>();
-            //var shirtRef1 = _refConverter.GetContentLink("Long Sleeve Shirt White Small_1");
-            //var shirtRef2 = _refConverter.GetContentLink("Long-Sleeve-Shirt-Blue-Medium_1");
-            //items.Add(shirtRef1);
-            //items.Add(shirtRef2);
-            //viewModel.Rewards = _promoEngine.Evaluate(items, market, market.DefaultCurrency, RequestFulfillmentStatus.All);
 
+            viewModel.CatalogItems.Add(new CatItem
+            {
+                Code = "Long Sleeve Shirt White Small_1",
+                Quantity = 0
+            });
+            viewModel.CatalogItems.Add(new CatItem
+            {
+                Code = "Long-Sleeve-Shirt-Blue-Medium_1",
+                Quantity = 0
+            });
+
+            return View(viewModel);
+        }
+
+        public ActionResult EvalPromos(DemoPromoViewModel viewModel)
+        {
+            var market = _currentMarket.GetCurrentMarket();
             var inMemOrderGroup = new InMemoryOrderGroup(market, market.DefaultCurrency);
-            var inMemLineItem1 = new InMemoryLineItem();
-            inMemLineItem1.Code = "Long Sleeve Shirt White Small_1";
-            inMemLineItem1.Quantity = 2;
-            //var inMemLineItem2 = new InMemoryLineItem();
-            //inMemLineItem2.Code = "Long-Sleeve-Shirt-Blue-Medium_1";
-            //inMemLineItem2.Quantity = 1;
-            inMemOrderGroup.GetFirstShipment().LineItems.Add(inMemLineItem1);
-            //inMemOrderGroup.GetFirstShipment().LineItems.Add(inMemLineItem2);
+
+            foreach (var item in viewModel.CatalogItems)
+            {
+                if (item.Quantity > 0)
+                {
+                    var inMemLineItem = new InMemoryLineItem
+                    {
+                        Code = item.Code,
+                        Quantity = item.Quantity
+                    };
+                    inMemOrderGroup.GetFirstShipment().LineItems.Add(inMemLineItem);
+                }
+
+            }
+
             var promoSettings = new PromotionEngineSettings(RequestFulfillmentStatus.All, true);
             viewModel.Rewards = _promoEngine.Run(inMemOrderGroup, promoSettings);
-            viewModel.InMemCart = inMemOrderGroup;
-            return View(viewModel);
+
+            viewModel.CartItems = inMemOrderGroup.GetFirstShipment().LineItems;
+            if(inMemOrderGroup.GetFirstForm().Promotions.Count > 0)
+            {
+                viewModel.PromoItems = inMemOrderGroup.GetFirstForm().Promotions.First().Entries;
+            }       
+
+            return View("Index", viewModel);
         }
     }
 }
