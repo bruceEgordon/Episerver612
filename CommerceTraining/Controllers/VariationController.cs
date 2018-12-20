@@ -932,7 +932,7 @@ namespace CommerceTraining.Controllers
             {
                 CatalogEntryCode = currentContent.Code,
                 WarehouseCode = "Nashua",
-                PurchaseAvailableChange = 4,
+                PurchaseAvailableChange = -4
             };
 
             _inventoryService.Adjust(theChange);

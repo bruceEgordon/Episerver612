@@ -14,8 +14,6 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
     public class DemoCustomTaxCalc : ITaxCalculator
     {
         private ITaxCalculator _defaultTaxCalculator;
-        private IContentRepository _contentRepository;
-        private ReferenceConverter _referenceConverter;
 
         public DemoCustomTaxCalc(ITaxCalculator defaultTaxCalculator)
         {
