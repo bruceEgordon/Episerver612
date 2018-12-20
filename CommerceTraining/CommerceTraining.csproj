@@ -452,6 +452,7 @@
     <Compile Include="Infrastructure\DemoCustomCalcConfigModule.cs" />
     <Compile Include="Infrastructure\EPiServerCommerceInitializationModule.cs" />
     <Compile Include="Infrastructure\EventReciever.cs" />
+    <Compile Include="Infrastructure\EventsDemoInitializationModule.cs" />
     <Compile Include="Infrastructure\FindCatalogConventions.cs" />
     <Compile Include="Infrastructure\MarketingInitialization.cs" />
     <Compile Include="Infrastructure\MyCookieService.cs" />

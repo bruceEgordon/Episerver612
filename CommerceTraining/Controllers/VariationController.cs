@@ -48,6 +48,7 @@ using Mediachase.Commerce.Plugins.Shipping;
 using EPiServer.Commerce.Order;
 using Mediachase.Commerce.Security;
 using EPiServer.Commerce.Order.Internal;
+using Mediachase.MetaDataPlus;
 
 namespace CommerceTraining.Controllers
 {
@@ -123,6 +124,18 @@ namespace CommerceTraining.Controllers
             _myPriceCalculator = myPriceCalculator;
         }
 
+        public ActionResult DoLowLevelDtoEdit(ShirtVariation currentContent, string newText)
+        {
+            //Old school way to change using Dtos directly
+            var catSystem = ServiceLocator.Current.GetInstance<ICatalogSystem>();
+            var shirtDto = catSystem.GetCatalogEntryDto(currentContent.Code);
+            var entryRow = shirtDto.CatalogEntry.First();
+            MetaObject metaObject = MetaObject.Load(MetaDataContext.Instance, entryRow.CatalogEntryId, entryRow.MetaClassId);
+            metaObject["MainBody"] = newText;
+            metaObject.AcceptChanges(MetaDataContext.Instance);
+
+            return RedirectToAction("Index");
+        }
 
 
         public ActionResult Index(ShirtVariation currentContent)
