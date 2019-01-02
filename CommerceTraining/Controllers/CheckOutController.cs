@@ -479,7 +479,7 @@ namespace CommerceTraining.Controllers
                     orderGroupId = orderReference.OrderGroupId
                 };
 
-                Q1.Send(m);
+                //Q1.Send(m); //didn't have messaging installed on my laptop so I get an exception if this is not commented out (BG).
             }
 
             #endregion
