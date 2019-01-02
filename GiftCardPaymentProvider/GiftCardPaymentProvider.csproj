@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="EPiServer.Business.Commerce">
+      <HintPath>..\packages\EPiServer.Commerce.Core.12.3.0\lib\net461\EPiServer.Business.Commerce.dll</HintPath>
+    </Reference>
+    <Reference Include="Mediachase.Commerce">
+      <HintPath>..\packages\EPiServer.Commerce.Core.12.3.0\lib\net461\Mediachase.Commerce.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
