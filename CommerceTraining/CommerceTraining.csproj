@@ -720,6 +720,12 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GiftCardPaymentProvider\GiftCardPaymentProvider.csproj">
+      <Project>{8fed5d94-2aaa-4cc2-8480-898fe1c96d8a}</Project>
+      <Name>GiftCardPaymentProvider</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

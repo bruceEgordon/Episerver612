@@ -19,14 +19,23 @@
 <h4>Purchase Simulator</h4>
 @using (Html.BeginForm("SimulatePurchase", "PaymentDemo"))
 {
-    <div class="container">
-        <div class="form-row">
-            <div class="form-group">
-                <label>Select a payment method:</label>
-                @Html.DropDownListFor(m => m.SelectedPaymentId,
-                    new SelectList(Model.PayMethods, "PaymentMethodId", "Name"),
-                    new { @class = "form-control" })
-            </div>
+<div class="container">
+    <div class="form-row">
+        <div class="form-group">
+            <label>Select a payment method:</label>
+            @Html.DropDownListFor(m => m.SelectedPaymentId,
+                new SelectList(Model.PayMethods, "PaymentMethodId", "Name"),
+                new { @class = "form-control" })
         </div>
     </div>
+    <div class="form-row">
+        <div class="form-group">
+            <input type="submit" value="Purchase" class="btn btn-primary" />
+            @if (!String.IsNullOrEmpty(Model.MessageOutput))
+            {
+                <label>@Model.MessageOutput</label>
+            }
+        </div>
+    </div>
+</div>
 }
