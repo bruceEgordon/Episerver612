@@ -4,5 +4,29 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 
+<h2>Payment Demo</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            @Model.Shirt.DisplayName
+        </div>
+        <div class="col-4">
+            <img src="@Model.ImageUrl" />
+        </div>
+    </div>
+</div>
+<h4>Purchase Simulator</h4>
+@using (Html.BeginForm("SimulatePurchase", "PaymentDemo"))
+{
+    <div class="container">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Select a payment method:</label>
+                @Html.DropDownListFor(m => m.SelectedPaymentId,
+                    new SelectList(Model.PayMethods, "PaymentMethodId", "Name"),
+                    new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+}
