@@ -1,4 +1,5 @@
 ﻿using CommerceTraining.Models.Catalog;
+using EPiServer.Commerce.Order;
 using Mediachase.Commerce.Orders.Dto;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace CommerceTraining.Models.ViewModels
         public ShirtVariation Shirt { get; set; }
         public string ImageUrl { get; set; }
         public int PurchaseQuantity { get; set; }
+        public IEnumerable<ILineItem> CartItems { get; set; }
         public string MessageOutput { get; set; }
     }
 }

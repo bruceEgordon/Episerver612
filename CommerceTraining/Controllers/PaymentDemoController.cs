@@ -43,32 +43,39 @@ namespace CommerceTraining.Controllers
         public ActionResult Index()
         {
             var viewModel = new PaymentDemoViewModel();
-            ModelFiller(viewModel);
+            var cart = InitializeStuff(viewModel);
 
             return View(viewModel);
         }
 
-        public void ModelFiller(PaymentDemoViewModel viewModel)
+        public ICart InitializeStuff(PaymentDemoViewModel viewModel)
         {
+            ICart cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
+
             var shirtRef = _referenceConverter.GetContentLink("Long Sleeve Shirt White Small_1");
             viewModel.Shirt = _contentLoader.Get<ShirtVariation>(shirtRef);
             viewModel.ImageUrl = _assetUrlResolver.GetAssetUrl(viewModel.Shirt);
             viewModel.PayMethods = PaymentManager.GetPaymentMethodsByMarket(_currentMarket.GetCurrentMarket().MarketId.Value).PaymentMethod;
+            viewModel.CartItems = cart.GetAllLineItems();
+            
+            return cart;
+        }
+
+        public ActionResult UpdateCart(PaymentDemoViewModel viewModel)
+        {
+            var cart = InitializeStuff(viewModel);
+            ILineItem lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);
+            lineItem.Quantity = viewModel.PurchaseQuantity;
+            lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
+
+            cart.AddLineItem(lineItem);
+            return View("Index", viewModel);
         }
 
         public ActionResult SimulatePurchase(PaymentDemoViewModel viewModel)
         {
-            ModelFiller(viewModel);
+            var cart = InitializeStuff(viewModel);
 
-            ICart cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "BogusCart");
-
-            ILineItem lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);
-            lineItem.Quantity = 1;
-            lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
-
-            cart.AddLineItem(lineItem);
-
-            //var selectedPayment = PaymentManager.GetPaymentMethod(viewModel.SelectedPaymentId).PaymentMethod.First();
             var payment = _orderGroupFactory.CreatePayment(cart);
             payment.PaymentMethodId = viewModel.SelectedPaymentId;
             payment.Amount = _orderGroupCalculator.GetTotal(cart).Amount;

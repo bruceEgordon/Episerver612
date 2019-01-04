@@ -160,11 +160,11 @@ namespace CommerceTraining.Controllers
 
             var promos = _promotionEngine.Evaluate(viewModel.Shirt.ContentLink);
 
-            if(promos.Count() > 0)
+            if (promos.Count() > 0)
             {
                 viewModel.PromotionsTotal = promos.Sum(p => p.Percentage);
                 lowestPrice -= lowestPrice * viewModel.PromotionsTotal / 100;
-                if(lowestPrice < lowestAllowed)
+                if (lowestPrice < lowestAllowed)
                 {
                     viewModel.SellingPrice = lowestAllowed;
                 }
@@ -174,6 +174,7 @@ namespace CommerceTraining.Controllers
                     viewModel.PromotionsApplied = true;
                 }
             }
+            else viewModel.SellingPrice = lowestPrice;
         }
     }
 }
