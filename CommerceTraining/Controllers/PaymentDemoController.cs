@@ -43,12 +43,12 @@ namespace CommerceTraining.Controllers
         public ActionResult Index()
         {
             var viewModel = new PaymentDemoViewModel();
-            var cart = InitializeStuff(viewModel);
+            InitializeModel(viewModel);
 
             return View(viewModel);
         }
 
-        public ICart InitializeStuff(PaymentDemoViewModel viewModel)
+        public void InitializeModel(PaymentDemoViewModel viewModel)
         {
             ICart cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
 
@@ -57,24 +57,27 @@ namespace CommerceTraining.Controllers
             viewModel.ImageUrl = _assetUrlResolver.GetAssetUrl(viewModel.Shirt);
             viewModel.PayMethods = PaymentManager.GetPaymentMethodsByMarket(_currentMarket.GetCurrentMarket().MarketId.Value).PaymentMethod;
             viewModel.CartItems = cart.GetAllLineItems();
-            
-            return cart;
+            viewModel.CartTotal = cart.GetTotal();
         }
 
         public ActionResult UpdateCart(PaymentDemoViewModel viewModel)
         {
-            var cart = InitializeStuff(viewModel);
+            InitializeModel(viewModel);
+            var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
+            
             ILineItem lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);
             lineItem.Quantity = viewModel.PurchaseQuantity;
             lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
-
+            
             cart.AddLineItem(lineItem);
-            return View("Index", viewModel);
+            _orderRepository.Save(cart);
+
+            return RedirectToAction("Index");
         }
 
         public ActionResult SimulatePurchase(PaymentDemoViewModel viewModel)
         {
-            var cart = InitializeStuff(viewModel);
+            var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
 
             var payment = _orderGroupFactory.CreatePayment(cart);
             payment.PaymentMethodId = viewModel.SelectedPaymentId;
@@ -83,6 +86,13 @@ namespace CommerceTraining.Controllers
 
             PaymentProcessingResult payResult = _paymentProcessor.ProcessPayment(cart, cart.GetFirstForm().Payments.First(), cart.GetFirstShipment());
 
+            if (payResult.IsSuccessful)
+            {
+                _orderRepository.SaveAsPurchaseOrder(cart);
+                _orderRepository.Delete(cart.OrderLink);
+            }
+
+            InitializeModel(viewModel);
             viewModel.MessageOutput = payResult.Message;
 
             return View("Index", viewModel);
