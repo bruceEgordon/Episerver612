@@ -52,11 +52,6 @@ namespace AcmePaymentProvider
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //DataBind();
-        }
-
-        public override void DataBind()
-        {
             if (paymentMethodDto != null && paymentMethodDto.PaymentMethodParameter != null)
             {
                 var param = GetParameterByName(secretKeyParamName);
@@ -64,18 +59,17 @@ namespace AcmePaymentProvider
                 {
                     txtSecretKey.Text = param.Value;
                 }
-                else
-                {
-                    Visible = false;
-                }
             }
-            base.DataBind();
         }
 
         private PaymentMethodDto.PaymentMethodParameterRow GetParameterByName(string name)
         {
-            var rows = paymentMethodDto.PaymentMethodParameter.Select($"Parameter='{name}'").First();
-            return rows as PaymentMethodDto.PaymentMethodParameterRow;
+            var rows = paymentMethodDto.PaymentMethodParameter.Select($"Parameter='{name}'");
+            if(rows != null && rows.Length > 0)
+            {
+                return rows[0] as PaymentMethodDto.PaymentMethodParameterRow;
+            }
+            return null;
         }
     }
 }

@@ -13,13 +13,14 @@ namespace AcmePaymentProvider
         public PaymentProcessingResult ProcessPayment(IOrderGroup orderGroup, IPayment payment)
         {
             decimal CreditLimit = 500;
+            string secretKey = Settings["SecretKeyExample"];
             if (payment.Amount <= CreditLimit)
             {
-                return PaymentProcessingResult.CreateSuccessfulResult("Acme credit approved payment!");
+                return PaymentProcessingResult.CreateSuccessfulResult($"Acme credit approved payment! Secret Code: {secretKey}");
             }
             else
             {
-                return PaymentProcessingResult.CreateUnsuccessfulResult("Sorry, you are over your limit!");
+                return PaymentProcessingResult.CreateUnsuccessfulResult($"Sorry, you are over your limit! Secret Code: {secretKey}");
             }
         }
     }
