@@ -721,6 +721,10 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AcmePaymentProvider\AcmePaymentProvider.csproj">
+      <Project>{ec3d412b-b726-4e4d-ad6f-01a51b91e77a}</Project>
+      <Name>AcmePaymentProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GiftCardPaymentProvider\GiftCardPaymentProvider.csproj">
       <Project>{8fed5d94-2aaa-4cc2-8480-898fe1c96d8a}</Project>
       <Name>GiftCardPaymentProvider</Name>
