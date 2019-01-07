@@ -16,7 +16,7 @@ namespace AcmePaymentProvider
             string secretKey = Settings["SecretKeyExample"];
             if (payment.Amount <= CreditLimit)
             {
-                return PaymentProcessingResult.CreateSuccessfulResult($"Acme credit approved payment! Secret Code: {secretKey}");
+                return PaymentProcessingResult.CreateSuccessfulResult($"Acme credit approved payment for {payment.Amount}! Secret Code: {secretKey}");
             }
             else
             {

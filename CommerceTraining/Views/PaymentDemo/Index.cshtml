@@ -53,21 +53,66 @@
         }
     </tbody>
 </table>
-<div class="alert-info">
+<div class="alert-info mb-5">
     <h6>Cart Total: @Model.CartTotal</h6>
 </div>
+<h6>Gift Cards</h6>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Primary Key Id</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Active</th>
+            <th scope="col">RedemtionCode</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.GiftCards)
+        {
+            <tr>
+                <td>@item.PrimaryKeyId</td>
+                <td>@item["Balance"]</td>
+                <td>@item["IsActive"]</td>
+                <td>@item["RedemtionCode"]</td>
+            </tr>
+        }
+    </tbody>
+</table>
 <h4>Purchase Simulator</h4>
 @using (Html.BeginForm("SimulatePurchase", "PaymentDemo"))
 {
     <div class="container">
         <div class="form-row">
             <div class="form-group">
-                <label>Select a payment method:</label>
+                <label>Select primary payment method:</label>
                 @Html.DropDownListFor(m => m.SelectedPaymentId,
                     new SelectList(Model.PayMethods, "PaymentMethodId", "Name"),
                     new { @class = "form-control" })
             </div>
         </div>
+        @if(Model.GiftCards.Count() > 0)
+        {
+            <div class="alert-info h6">
+                Gift Card Available
+            </div>
+            <div class="form-row">
+                <div class="form-group col-2">
+                    <div class="form-check">
+                        @Html.EditorFor(m => m.UseGiftCard,
+                       new { htmlAttributes = new { @class = "form-check-input" } })
+                        <label class="form-check-label" for="UseGiftCard">Use Gift Card</label>
+                    </div>
+                </div>
+                <div class="form-group col-2">
+                    <label>Enter Amount:</label>
+                    @Html.EditorFor(m => m.GiftCardDebitAmt, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group col-3">
+                    <label>Redemption Code:</label>
+                    @Html.EditorFor(m => m.RedemtionCode, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        }
         <div class="form-row">
             <div class="form-group">
                 <input type="submit" value="Purchase" class="btn btn-primary" />

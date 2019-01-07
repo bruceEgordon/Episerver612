@@ -4,6 +4,9 @@ using EPiServer;
 using EPiServer.Commerce.Catalog;
 using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Commerce.Order;
+using EPiServer.Globalization;
+using GiftCardPaymentProvider;
+using Mediachase.BusinessFoundation.Data;
 using Mediachase.Commerce;
 using Mediachase.Commerce.Catalog;
 using Mediachase.Commerce.Customers;
@@ -58,6 +61,8 @@ namespace CommerceTraining.Controllers
             viewModel.PayMethods = PaymentManager.GetPaymentMethodsByMarket(_currentMarket.GetCurrentMarket().MarketId.Value).PaymentMethod;
             viewModel.CartItems = cart.GetAllLineItems();
             viewModel.CartTotal = cart.GetTotal();
+
+            viewModel.GiftCards = GiftCardService.GetClientGiftCards("TrainingGiftCard", (PrimaryKeyId)CustomerContext.Current.CurrentContactId);
         }
 
         public ActionResult UpdateCart(PaymentDemoViewModel viewModel)
@@ -89,12 +94,28 @@ namespace CommerceTraining.Controllers
         {
             var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
 
-            var payment = _orderGroupFactory.CreatePayment(cart);
-            payment.PaymentMethodId = viewModel.SelectedPaymentId;
-            payment.Amount = _orderGroupCalculator.GetTotal(cart).Amount;
-            cart.AddPayment(payment);
+            var primaryPayment = _orderGroupFactory.CreatePayment(cart);
+            primaryPayment.PaymentMethodId = viewModel.SelectedPaymentId;
+            primaryPayment.Amount = _orderGroupCalculator.GetTotal(cart).Amount;
+            cart.AddPayment(primaryPayment);
 
-            PaymentProcessingResult payResult = _paymentProcessor.ProcessPayment(cart, cart.GetFirstForm().Payments.First(), cart.GetFirstShipment());
+            if (viewModel.UseGiftCard)
+            {
+                var giftMethod = PaymentManager.GetPaymentMethodBySystemName("GiftCard", ContentLanguage.PreferredCulture.Name);
+                var giftPayment = _orderGroupFactory.CreatePayment(cart);
+                giftPayment.PaymentMethodId = giftMethod.PaymentMethod[0].PaymentMethodId;
+                giftPayment.Amount = viewModel.GiftCardDebitAmt;
+                giftPayment.ValidationCode = viewModel.RedemtionCode;
+                cart.AddPayment(giftPayment);
+                PaymentProcessingResult giftPayResult = _paymentProcessor.ProcessPayment(cart, giftPayment, cart.GetFirstShipment());
+                if (giftPayResult.IsSuccessful)
+                {
+                    primaryPayment.Amount -= giftPayment.Amount;
+                }
+                viewModel.GiftInfoMessage = giftPayResult.Message;
+            }
+
+            PaymentProcessingResult payResult = _paymentProcessor.ProcessPayment(cart, primaryPayment, cart.GetFirstShipment());
 
             if (payResult.IsSuccessful)
             {

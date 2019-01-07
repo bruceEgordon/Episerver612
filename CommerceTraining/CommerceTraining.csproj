@@ -726,7 +726,7 @@
       <Name>AcmePaymentProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\GiftCardPaymentProvider\GiftCardPaymentProvider.csproj">
-      <Project>{8fed5d94-2aaa-4cc2-8480-898fe1c96d8a}</Project>
+      <Project>{2dbd4aa6-496c-40a9-856d-c537ed5a509c}</Project>
       <Name>GiftCardPaymentProvider</Name>
     </ProjectReference>
   </ItemGroup>

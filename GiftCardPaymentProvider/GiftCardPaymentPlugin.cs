@@ -1,6 +1,10 @@
-﻿using System;
+﻿using EPiServer.Commerce.Order;
+using Mediachase.BusinessFoundation.Data;
+using Mediachase.Commerce.Orders;
+using System;
 using System.Collections.Generic;
-using EPiServer.Commerce.Order;
+using System.Linq;
+using System.Web;
 
 namespace GiftCardPaymentProvider
 {
@@ -10,7 +14,17 @@ namespace GiftCardPaymentProvider
 
         public PaymentProcessingResult ProcessPayment(IOrderGroup orderGroup, IPayment payment)
         {
-            return PaymentProcessingResult.CreateSuccessfulResult("Gift card payment accepted!");
+            payment.TransactionType = TransactionType.Sale.ToString();
+            var result = GiftCardService.DebitGiftCard("TrainingGiftCard", (PrimaryKeyId)orderGroup.CustomerId, payment.ValidationCode, payment.Amount);
+            if (result)
+            {
+                return PaymentProcessingResult.CreateSuccessfulResult($"Gift Card Applied for {payment.Amount}!");
+            }
+            else
+            {
+                payment.Status = PaymentStatus.Failed.ToString();
+                return PaymentProcessingResult.CreateUnsuccessfulResult("Gift Card Declined!");
+            }
         }
     }
 }
