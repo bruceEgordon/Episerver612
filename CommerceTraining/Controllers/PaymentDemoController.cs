@@ -64,12 +64,22 @@ namespace CommerceTraining.Controllers
         {
             InitializeModel(viewModel);
             var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
+
+            var lineItem = cart.GetAllLineItems().FirstOrDefault(x => x.Code == viewModel.Shirt.Code);
+
+            if(lineItem == null)
+            {
+                lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);
+                lineItem.Quantity = viewModel.PurchaseQuantity;
+                lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
+                cart.AddLineItem(lineItem);
+            }
+            else
+            {
+                var shipment = cart.GetFirstShipment();
+                cart.UpdateLineItemQuantity(shipment, lineItem, viewModel.PurchaseQuantity);
+            }
             
-            ILineItem lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);
-            lineItem.Quantity = viewModel.PurchaseQuantity;
-            lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
-            
-            cart.AddLineItem(lineItem);
             _orderRepository.Save(cart);
 
             return RedirectToAction("Index");
