@@ -52,6 +52,9 @@
     <Reference Include="Mediachase.Commerce">
       <HintPath>..\packages\EPiServer.Commerce.Core.12.3.0\lib\net461\Mediachase.Commerce.dll</HintPath>
     </Reference>
+    <Reference Include="Mediachase.WebConsoleLib">
+      <HintPath>..\packages\EPiServer.Commerce.Core.12.3.0\lib\net461\Mediachase.WebConsoleLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -76,9 +79,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ConfigurePayment.ascx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurePayment.ascx.cs">
+      <DependentUpon>ConfigurePayment.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfigurePayment.ascx.designer.cs">
+      <DependentUpon>ConfigurePayment.ascx</DependentUpon>
+    </Compile>
     <Compile Include="GiftCardPaymentPlugin.cs" />
     <Compile Include="GiftCardService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,6 +10,7 @@ using Mediachase.BusinessFoundation.Data;
 using Mediachase.Commerce;
 using Mediachase.Commerce.Catalog;
 using Mediachase.Commerce.Customers;
+using Mediachase.Commerce.Orders;
 using Mediachase.Commerce.Orders.Managers;
 using System;
 using System.Collections.Generic;
@@ -97,7 +98,7 @@ namespace CommerceTraining.Controllers
             var primaryPayment = _orderGroupFactory.CreatePayment(cart);
             primaryPayment.PaymentMethodId = viewModel.SelectedPaymentId;
             primaryPayment.Amount = _orderGroupCalculator.GetTotal(cart).Amount;
-            cart.AddPayment(primaryPayment);
+            primaryPayment.PaymentMethodName = PaymentManager.GetPaymentMethod(viewModel.SelectedPaymentId).PaymentMethod[0].Name;
 
             if (viewModel.UseGiftCard)
             {
@@ -106,11 +107,13 @@ namespace CommerceTraining.Controllers
                 giftPayment.PaymentMethodId = giftMethod.PaymentMethod[0].PaymentMethodId;
                 giftPayment.Amount = viewModel.GiftCardDebitAmt;
                 giftPayment.ValidationCode = viewModel.RedemtionCode;
-                cart.AddPayment(giftPayment);
+                giftPayment.PaymentMethodName = giftMethod.PaymentMethod[0].Name;
+                
                 PaymentProcessingResult giftPayResult = _paymentProcessor.ProcessPayment(cart, giftPayment, cart.GetFirstShipment());
                 if (giftPayResult.IsSuccessful)
                 {
                     primaryPayment.Amount -= giftPayment.Amount;
+                    cart.AddPayment(giftPayment);
                 }
                 viewModel.GiftInfoMessage = giftPayResult.Message;
             }
@@ -119,6 +122,7 @@ namespace CommerceTraining.Controllers
 
             if (payResult.IsSuccessful)
             {
+                cart.AddPayment(primaryPayment);
                 _orderRepository.SaveAsPurchaseOrder(cart);
                 _orderRepository.Delete(cart.OrderLink);
             }

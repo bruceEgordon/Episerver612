@@ -81,7 +81,7 @@
 <h4>Purchase Simulator</h4>
 @using (Html.BeginForm("SimulatePurchase", "PaymentDemo"))
 {
-    <div class="container">
+    <div class="container mb-5">
         <div class="form-row">
             <div class="form-group">
                 <label>Select primary payment method:</label>
@@ -90,7 +90,7 @@
                     new { @class = "form-control" })
             </div>
         </div>
-        @if(Model.GiftCards.Count() > 0)
+        @if (Model.GiftCards.Count() > 0)
         {
             <div class="alert-info h6">
                 Gift Card Available
@@ -116,11 +116,16 @@
         <div class="form-row">
             <div class="form-group">
                 <input type="submit" value="Purchase" class="btn btn-primary" />
-                @if (!String.IsNullOrEmpty(Model.MessageOutput))
-                {
-                    <label>@Model.MessageOutput</label>
-                }
+
             </div>
         </div>
+        @if (!String.IsNullOrEmpty(Model.MessageOutput))
+        {
+            <div class="alert-info">@Model.MessageOutput</div>
+        }
+        @if (!String.IsNullOrEmpty(Model.GiftInfoMessage))
+        {
+            <div class="alert-info">@Model.GiftInfoMessage</div>
+        }
     </div>
 }
