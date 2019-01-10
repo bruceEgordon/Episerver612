@@ -1,4 +1,5 @@
 ﻿using Mediachase.Commerce.Orders.Dto;
+using Mediachase.Commerce.Orders.Managers;
 using Mediachase.Web.Console.BaseClasses;
 using Mediachase.Web.Console.Interfaces;
 using System;
@@ -37,6 +38,7 @@ namespace AcmePaymentProvider
                     if(param != null)
                     {
                         param.Value = txtSecretKey.Text;
+                        PaymentManager.SavePayment(paymentMethodDto);
                     }
                     else
                     {

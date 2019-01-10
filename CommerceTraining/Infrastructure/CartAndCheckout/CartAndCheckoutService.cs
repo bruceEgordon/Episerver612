@@ -222,8 +222,7 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
             // Not any good API for getting ShippingOptionParameters direct
 
             List<FilterElement> filters = new List<FilterElement>();
-            filters.Add(new FilterElement("Value", FilterElementType.Equal, code)); // the Code
-            //var x = BusinessManager.List("ShippingOptionParameter", filters.ToArray());
+            filters.Add(new FilterElement("Value", FilterElementType.Equal, code));
 
             Guid theGuid = new Guid();
             using (IDataReader reader = Mediachase.BusinessFoundation.Data.DataHelper
@@ -484,24 +483,24 @@ namespace CommerceTraining.Infrastructure.CartAndCheckout
         {
             // RoCe: tot comes in subtracted, don't need to do it in here
             // only one club-card per buyer in this store
-            PrimaryKeyId pk = (PrimaryKeyId)CustomerContext.Current.CurrentContactId;
+            //PrimaryKeyId pk = (PrimaryKeyId)CustomerContext.Current.CurrentContactId;
 
-            EntityObject[] theCards = BusinessManager.List
-                ("ClubCard", new[] { FilterElement.EqualElement("ReferenceFieldNameId", pk) });
+            //EntityObject[] theCards = BusinessManager.List
+            //    ("ClubCard", new[] { FilterElement.EqualElement("ReferenceFieldNameId", pk) });
 
-            if (theCards.Count() != 0) // ...is there one or more card(s))
-            {
-                // grab the first one as demo
-                int balance = (int)theCards[0]["Balance"]; // Collected purchase-points
+            //if (theCards.Count() != 0) // ...is there one or more card(s))
+            //{
+            //    // grab the first one as demo
+            //    int balance = (int)theCards[0]["Balance"]; // Collected purchase-points
 
-                // Get cardtype for current cust for calc of points (Gold, Silver or Bronze)
-                int value = (int)theCards[0]["CardTypeEnum"]; // gets the int
+            //    // Get cardtype for current cust for calc of points (Gold, Silver or Bronze)
+            //    int value = (int)theCards[0]["CardTypeEnum"]; // gets the int
 
-                // probably some store policy involved... instead of the silly example below
-                int newBalance = balance + (int)Math.Round(totalSpent / value); // this is a demo :)
-                theCards[0]["Balance"] = newBalance;
-                BusinessManager.Update(theCards[0]);
-            }
+            //    // probably some store policy involved... instead of the silly example below
+            //    int newBalance = balance + (int)Math.Round(totalSpent / value); // this is a demo :)
+            //    theCards[0]["Balance"] = newBalance;
+            //    BusinessManager.Update(theCards[0]);
+            //}
         }
 
         #endregion

@@ -16,6 +16,8 @@ namespace CommerceTraining.Models.ViewModels
         public IEnumerable<PaymentMethodDto.PaymentMethodRow> PayMethods { get; set; }
         public ShirtVariation Shirt { get; set; }
         public string ImageUrl { get; set; }
+        public DefaultVariation Suspenders { get; set; }
+        public string SuspendersImageUrl { get; set; }
         public int PurchaseQuantity { get; set; }
         public Money CartTotal { get; set; }
         public IEnumerable<ILineItem> CartItems { get; set; }

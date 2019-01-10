@@ -397,6 +397,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="TrainingPaymentProvider">
+      <HintPath>..\..\..\Episerver\TrainingPaymentProvider\TrainingPaymentProvider\bin\TrainingPaymentProvider.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

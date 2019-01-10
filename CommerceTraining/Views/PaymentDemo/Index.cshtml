@@ -29,6 +29,39 @@
         <div class="form-row">
             <div class="form-group">
                 <input type="submit" value="Add/Update Cart" class="btn btn-primary" />
+                @Html.Hidden("itemCode", Model.Shirt.Code)
+            </div>
+        </div>
+    </div>
+}
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            @Model.Suspenders.DisplayName
+            @if (Model.Suspenders.RequireSpecialShipping)
+            {
+                <br /><div class="alert-info">Special Shipping Required</div>
+            }
+        </div>
+        <div class="col-4">
+            <img src="@Model.SuspendersImageUrl" />
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("UpdateCart", "PaymentDemo"))
+{
+    <div class="container">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Set Quantity for Cart:</label>
+                @Html.EditorFor(m => m.PurchaseQuantity,
+                new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <input type="submit" value="Add/Update Cart" class="btn btn-primary" />
+                @Html.Hidden("itemCode", Model.Suspenders.Code)
             </div>
         </div>
     </div>

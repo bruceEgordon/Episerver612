@@ -52,13 +52,18 @@ namespace CommerceTraining.Controllers
             return View(viewModel);
         }
 
-        public void InitializeModel(PaymentDemoViewModel viewModel)
+        private void InitializeModel(PaymentDemoViewModel viewModel)
         {
             ICart cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
 
             var shirtRef = _referenceConverter.GetContentLink("Long Sleeve Shirt White Small_1");
             viewModel.Shirt = _contentLoader.Get<ShirtVariation>(shirtRef);
             viewModel.ImageUrl = _assetUrlResolver.GetAssetUrl(viewModel.Shirt);
+
+            var suspendersRef = _referenceConverter.GetContentLink("Suspenders_1");
+            viewModel.Suspenders = _contentLoader.Get<DefaultVariation>(suspendersRef);
+            viewModel.SuspendersImageUrl = _assetUrlResolver.GetAssetUrl(viewModel.Suspenders);
+
             viewModel.PayMethods = PaymentManager.GetPaymentMethodsByMarket(_currentMarket.GetCurrentMarket().MarketId.Value).PaymentMethod;
             viewModel.CartItems = cart.GetAllLineItems();
             viewModel.CartTotal = cart.GetTotal();
@@ -66,24 +71,24 @@ namespace CommerceTraining.Controllers
             viewModel.GiftCards = GiftCardService.GetClientGiftCards("TrainingGiftCard", (PrimaryKeyId)CustomerContext.Current.CurrentContactId);
         }
 
-        public ActionResult UpdateCart(PaymentDemoViewModel viewModel)
+        public ActionResult UpdateCart(int PurchaseQuantity, string itemCode)
         {
-            InitializeModel(viewModel);
+            //InitializeModel(viewModel);
             var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
 
-            var lineItem = cart.GetAllLineItems().FirstOrDefault(x => x.Code == viewModel.Shirt.Code);
+            var lineItem = cart.GetAllLineItems().FirstOrDefault(x => x.Code == itemCode);
 
             if(lineItem == null)
             {
-                lineItem = _orderGroupFactory.CreateLineItem(viewModel.Shirt.Code, cart);
-                lineItem.Quantity = viewModel.PurchaseQuantity;
-                lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
+                lineItem = _orderGroupFactory.CreateLineItem(itemCode, cart);
+                lineItem.Quantity = PurchaseQuantity;
+                //lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
                 cart.AddLineItem(lineItem);
             }
             else
             {
                 var shipment = cart.GetFirstShipment();
-                cart.UpdateLineItemQuantity(shipment, lineItem, viewModel.PurchaseQuantity);
+                cart.UpdateLineItemQuantity(shipment, lineItem, PurchaseQuantity);
             }
             
             _orderRepository.Save(cart);
@@ -126,11 +131,18 @@ namespace CommerceTraining.Controllers
                 _orderRepository.SaveAsPurchaseOrder(cart);
                 _orderRepository.Delete(cart.OrderLink);
             }
-
-            InitializeModel(viewModel);
             viewModel.MessageOutput = payResult.Message;
 
+            InitializeModel(viewModel);    
+
             return View("Index", viewModel);
+        }
+
+        public bool RequiresSpecialShipping(string code)
+        {
+            var variantRef = _referenceConverter.GetContentLink(code);
+            var defaultVariation = _contentLoader.Get<DefaultVariation>(variantRef);
+            return defaultVariation.RequireSpecialShipping;
         }
     }
 }
