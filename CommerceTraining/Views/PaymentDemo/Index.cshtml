@@ -1,71 +1,39 @@
 ﻿@model CommerceTraining.Models.ViewModels.PaymentDemoViewModel
-
+@using CommerceTraining.Controllers
 @{
-    ViewBag.Title = "Index";
-}
 
+                ViewBag.Title = "Index";
+}
 
 <h2>Payment Demo</h2>
-<div class="container">
-    <div class="row">
-        <div class="col-4">
-            @Model.Shirt.DisplayName
-        </div>
-        <div class="col-4">
-            <img src="@Model.ImageUrl" />
-        </div>
-    </div>
-</div>
-@using (Html.BeginForm("UpdateCart", "PaymentDemo"))
+@foreach (var item in Model.Variants)
 {
-    <div class="container">
-        <div class="form-row">
-            <div class="form-group">
-                <label>Set Quantity for Cart:</label>
-                @Html.EditorFor(m => m.PurchaseQuantity,
-                new { htmlAttributes = new { @class = "form-control" } })
+    using (Html.BeginForm("UpdateCart", "PaymentDemo"))
+    {
+        <div class="container border-bottom">
+            <div class="row mb-4 mt-4">
+                <div class="col-4">
+                    <span class="h5">@item.DisplayName</span>
+                    @if (item.RequireSpecialShipping)
+                    {
+                        <div class="alert-info">Special Shipping Required</div>
+                    }
+                </div>
+                <div class="col-3">
+                    <img src="@Html.UrlResolver(item)" />
+                </div>
+                <div class="form-group col-2">
+                    <label>Set Quantity for Cart:</label>
+                    @Html.TextBox("PurchaseQuantity", '0',
+                    new { @class = "form-control", @type = "number", @min = "0" })
+                    <input type="submit" value="Add/Update Cart" class="btn btn-primary mt-3" />
+                    @Html.Hidden("itemCode", item.Code)
+                </div>
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <input type="submit" value="Add/Update Cart" class="btn btn-primary" />
-                @Html.Hidden("itemCode", Model.Shirt.Code)
-            </div>
-        </div>
-    </div>
+        </div>     
+    }
 }
-<div class="container">
-    <div class="row">
-        <div class="col-4">
-            @Model.Suspenders.DisplayName
-            @if (Model.Suspenders.RequireSpecialShipping)
-            {
-                <br /><div class="alert-info">Special Shipping Required</div>
-            }
-        </div>
-        <div class="col-4">
-            <img src="@Model.SuspendersImageUrl" />
-        </div>
-    </div>
-</div>
-@using (Html.BeginForm("UpdateCart", "PaymentDemo"))
-{
-    <div class="container">
-        <div class="form-row">
-            <div class="form-group">
-                <label>Set Quantity for Cart:</label>
-                @Html.EditorFor(m => m.PurchaseQuantity,
-                new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <input type="submit" value="Add/Update Cart" class="btn btn-primary" />
-                @Html.Hidden("itemCode", Model.Suspenders.Code)
-            </div>
-        </div>
-    </div>
-}
+
 <h4>Cart Items</h4>
 <table class="table">
     <thead>

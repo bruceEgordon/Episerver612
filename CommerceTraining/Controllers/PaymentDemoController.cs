@@ -5,12 +5,14 @@ using EPiServer.Commerce.Catalog;
 using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Commerce.Order;
 using EPiServer.Globalization;
+using EPiServer.ServiceLocation;
 using GiftCardPaymentProvider;
 using Mediachase.BusinessFoundation.Data;
 using Mediachase.Commerce;
 using Mediachase.Commerce.Catalog;
 using Mediachase.Commerce.Customers;
 using Mediachase.Commerce.Orders;
+using Mediachase.Commerce.Orders.Dto;
 using Mediachase.Commerce.Orders.Managers;
 using System;
 using System.Collections.Generic;
@@ -57,12 +59,16 @@ namespace CommerceTraining.Controllers
             ICart cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
 
             var shirtRef = _referenceConverter.GetContentLink("Long Sleeve Shirt White Small_1");
-            viewModel.Shirt = _contentLoader.Get<ShirtVariation>(shirtRef);
-            viewModel.ImageUrl = _assetUrlResolver.GetAssetUrl(viewModel.Shirt);
-
             var suspendersRef = _referenceConverter.GetContentLink("Suspenders_1");
-            viewModel.Suspenders = _contentLoader.Get<DefaultVariation>(suspendersRef);
-            viewModel.SuspendersImageUrl = _assetUrlResolver.GetAssetUrl(viewModel.Suspenders);
+
+            if(viewModel.Variants == null)
+            {
+                viewModel.Variants = new List<DefaultVariation>
+                {
+                    _contentLoader.Get<DefaultVariation>(shirtRef),
+                    _contentLoader.Get<DefaultVariation>(suspendersRef)
+                };
+            }
 
             viewModel.PayMethods = PaymentManager.GetPaymentMethodsByMarket(_currentMarket.GetCurrentMarket().MarketId.Value).PaymentMethod;
             viewModel.CartItems = cart.GetAllLineItems();
@@ -73,7 +79,9 @@ namespace CommerceTraining.Controllers
 
         public ActionResult UpdateCart(int PurchaseQuantity, string itemCode)
         {
-            //InitializeModel(viewModel);
+            var itemRef = _referenceConverter.GetContentLink(itemCode);
+            var itemVar = _contentLoader.Get<DefaultVariation>(itemRef);
+
             var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
 
             var lineItem = cart.GetAllLineItems().FirstOrDefault(x => x.Code == itemCode);
@@ -82,18 +90,39 @@ namespace CommerceTraining.Controllers
             {
                 lineItem = _orderGroupFactory.CreateLineItem(itemCode, cart);
                 lineItem.Quantity = PurchaseQuantity;
-                //lineItem.PlacedPrice = viewModel.Shirt.GetDefaultPrice().UnitPrice;
-                cart.AddLineItem(lineItem);
+                lineItem.PlacedPrice = itemVar.GetDefaultPrice().UnitPrice;
+                if (itemVar.RequireSpecialShipping)
+                {
+                    //var methodId = GetShipMethodByParam(itemCode);
+                    IShipment specialShip = _orderGroupFactory.CreateShipment(cart); 
+                    cart.AddShipment(specialShip);
+                    specialShip.ShippingMethodId = GetShipMethodByParam(itemCode);
+                    
+                    cart.AddLineItem(specialShip, lineItem);
+                }
+                else
+                {
+                    cart.AddLineItem(lineItem);
+                }               
             }
             else
             {
-                var shipment = cart.GetFirstShipment();
+                var shipment = cart.GetFirstForm().Shipments.
+                    Where(s => s.LineItems.Contains(lineItem) == true).FirstOrDefault();
+
                 cart.UpdateLineItemQuantity(shipment, lineItem, PurchaseQuantity);
             }
             
             _orderRepository.Save(cart);
 
             return RedirectToAction("Index");
+        }
+
+        private Guid GetShipMethodByParam(string paramCodeValue)
+        {
+            var paramRow = ShippingManager.GetShippingMethodsByMarket(MarketId.Default.Value, false).
+                ShippingMethodParameter.Where(p => p.Value == paramCodeValue).FirstOrDefault();
+            return paramRow.ShippingMethodId;
         }
 
         public ActionResult SimulatePurchase(PaymentDemoViewModel viewModel)
@@ -137,12 +166,15 @@ namespace CommerceTraining.Controllers
 
             return View("Index", viewModel);
         }
+    }
 
-        public bool RequiresSpecialShipping(string code)
+    public static class CustomHelpers
+    {
+        public static IHtmlString UrlResolver(this HtmlHelper helper, IAssetContainer asset)
         {
-            var variantRef = _referenceConverter.GetContentLink(code);
-            var defaultVariation = _contentLoader.Get<DefaultVariation>(variantRef);
-            return defaultVariation.RequireSpecialShipping;
+            var resolver = ServiceLocator.Current.GetInstance<AssetUrlResolver>();
+            var Url = resolver.GetAssetUrl(asset);
+            return new MvcHtmlString(Url);
         }
     }
 }
