@@ -84,7 +84,6 @@ namespace CommerceTraining.Controllers
             var itemVar = _contentLoader.Get<DefaultVariation>(itemRef);
 
             var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
-
             var lineItem = cart.GetAllLineItems().FirstOrDefault(x => x.Code == itemCode);
 
             if(lineItem == null)
@@ -94,14 +93,20 @@ namespace CommerceTraining.Controllers
                 lineItem.PlacedPrice = itemVar.GetDefaultPrice().UnitPrice;
                 if (itemVar.RequireSpecialShipping)
                 {
-                    IShipment specialShip = _orderGroupFactory.CreateShipment(cart); 
+                    IShipment specialShip = _orderGroupFactory.CreateShipment(cart);
+                    //specialShip.ShippingMethodId = GetShipMethodByParam(itemCode);
+                    specialShip.ShippingMethodId = GetSipMethodByOptionParam(itemCode);
+                    specialShip.ShippingAddress = GetOrderAddress(cart);
+
                     cart.AddShipment(specialShip);
-                    specialShip.ShippingMethodId = GetShipMethodByParam(itemCode);
                     
                     cart.AddLineItem(specialShip, lineItem);
                 }
                 else
                 {
+                    var ship = cart.GetFirstShipment();
+                    ship.ShippingAddress = GetOrderAddress(cart);
+
                     cart.AddLineItem(lineItem);
                 }               
             }
@@ -123,6 +128,25 @@ namespace CommerceTraining.Controllers
             var paramRow = ShippingManager.GetShippingMethodsByMarket(MarketId.Default.Value, false).
                 ShippingMethodParameter.Where(p => p.Value == paramCodeValue).FirstOrDefault();
             return paramRow.ShippingMethodId;
+        }
+
+        private Guid GetSipMethodByOptionParam(string itemCode)
+        {
+            string paramName = itemCode.Split('_')[0];
+            ShippingMethodDto dto = ShippingManager.GetShippingMethodsByMarket(MarketId.Default.Value, false);
+            Guid optionParam = dto.ShippingOptionParameter.Where(r => r.Parameter.Contains(paramName)).FirstOrDefault().ShippingOptionId;
+            return dto.ShippingMethod.Where(r => r.ShippingOptionId == optionParam).FirstOrDefault().ShippingMethodId;
+        }
+
+        private IOrderAddress GetOrderAddress(IOrderGroup cart)
+        {
+            var shipAddress = _orderGroupFactory.CreateOrderAddress(cart);
+            shipAddress.City = "Atlanta";
+            shipAddress.CountryCode = "USA";
+            shipAddress.CountryName = "United States";
+            shipAddress.Id = "DemoShipAddress";
+
+            return shipAddress;
         }
 
         public ActionResult SimulatePurchase(PaymentDemoViewModel viewModel)
