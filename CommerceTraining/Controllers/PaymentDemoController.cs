@@ -75,6 +75,7 @@ namespace CommerceTraining.Controllers
             viewModel.CartTotal = cart.GetTotal();
 
             viewModel.GiftCards = GiftCardService.GetClientGiftCards("TrainingGiftCard", (PrimaryKeyId)CustomerContext.Current.CurrentContactId);
+            viewModel.ShippingMethods = ShippingManager.GetShippingMethodsByMarket(MarketId.Default.Value, false).ShippingMethod.ToList();
         }
 
         public ActionResult UpdateCart(int PurchaseQuantity, string itemCode)
@@ -93,7 +94,6 @@ namespace CommerceTraining.Controllers
                 lineItem.PlacedPrice = itemVar.GetDefaultPrice().UnitPrice;
                 if (itemVar.RequireSpecialShipping)
                 {
-                    //var methodId = GetShipMethodByParam(itemCode);
                     IShipment specialShip = _orderGroupFactory.CreateShipment(cart); 
                     cart.AddShipment(specialShip);
                     specialShip.ShippingMethodId = GetShipMethodByParam(itemCode);
@@ -128,6 +128,7 @@ namespace CommerceTraining.Controllers
         public ActionResult SimulatePurchase(PaymentDemoViewModel viewModel)
         {
             var cart = _orderRepository.LoadOrCreateCart<ICart>(CustomerContext.Current.CurrentContactId, "Default");
+            cart.GetFirstShipment().ShippingMethodId = viewModel.SelectedShippingMethodId;
 
             var primaryPayment = _orderGroupFactory.CreatePayment(cart);
             primaryPayment.PaymentMethodId = viewModel.SelectedPaymentId;

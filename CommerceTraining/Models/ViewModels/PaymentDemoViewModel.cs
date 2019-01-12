@@ -23,5 +23,7 @@ namespace CommerceTraining.Models.ViewModels
         public decimal GiftCardDebitAmt { get; set; }
         public string MessageOutput { get; set; }
         public string GiftInfoMessage { get; set; }
+        public IEnumerable<ShippingMethodDto.ShippingMethodRow> ShippingMethods { get; set; }
+        public Guid SelectedShippingMethodId { get; set; }
     }
 }

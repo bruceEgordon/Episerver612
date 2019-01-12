@@ -57,6 +57,8 @@
 <div class="alert-info mb-5">
     <h6>Cart Total: @Model.CartTotal</h6>
 </div>
+
+
 <h6>Gift Cards</h6>
 <table class="table">
     <thead>
@@ -84,11 +86,17 @@
 {
     <div class="container mb-5">
         <div class="form-row">
-            <div class="form-group">
+            <div class="form-group col-3">
                 <label>Select primary payment method:</label>
                 @Html.DropDownListFor(m => m.SelectedPaymentId,
                     new SelectList(Model.PayMethods, "PaymentMethodId", "Name"),
                     new { @class = "form-control" })
+            </div>
+            <div class="form-group col-3">
+                <label>Select primary shipping method:</label>
+                @Html.DropDownListFor(m => m.SelectedShippingMethodId,
+                            new SelectList(Model.ShippingMethods, "ShippingMethodId", "Name"),
+                            new { @class = "form-control" })
             </div>
         </div>
         @if (Model.GiftCards.Count() > 0)
