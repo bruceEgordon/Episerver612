@@ -1174,18 +1174,9 @@ Parameter name: ContactInformation */
                 }
             }
 
-
             ShippingMethodDto.ShippingMethodRow foundShipping = null;
 
             foundShipping = ShippingManager.GetShippingMethod(shippingOptionGuid).ShippingMethod.First();
-
-            //foreach (var item in dto.ShippingMethod) 
-            //{
-            //    if (item.ShippingOptionId == shippingOptionGuid)
-            //    {
-            //        foundShipping = ShippingManager.GetShippingMethod(item.ShippingMethodId).ShippingMethod.FirstOrDefault();
-            //    }
-            //}
 
             // could be furter granular eg. what type of method for the Gateway
             ShippingMethodDto.ShippingMethodParameterRow[] paramRows = foundShipping.GetShippingMethodParameterRows();
@@ -1206,12 +1197,11 @@ Parameter name: ContactInformation */
         {
             /* Scope is to use the parameters for options & methods
                This we do for having a look if there is a "forced" shipping for a SKU
-               ...and there is...as a case for an exerciseand demo
+               ...and there is...as a case for an exercise and demo
                You could of course do/create this lookup in many custom ways, 
                but the goal is to use something already in place in Commerce */
 
-            ShippingMethodDto dto = ShippingManager.GetShippingMethodsByMarket
-                (MarketId.Default.Value, false); // ...just using the "Default Market" as an example
+            ShippingMethodDto dto = ShippingManager.GetShippingMethodsByMarket(MarketId.Default.Value, false); // ...just using the "Default Market" as an example
             // Have the dbo.MarketShippingMethods table if we want to investigate further
 
             #region ...just checking / info
