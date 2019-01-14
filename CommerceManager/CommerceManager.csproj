@@ -316,6 +316,10 @@
       <Project>{ec3d412b-b726-4e4d-ad6f-01a51b91e77a}</Project>
       <Name>AcmePaymentProvider</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CustomBfHandler\CustomBfHandler.csproj">
+      <Project>{4597b470-c38d-4983-b9fe-4fb7abf4855a}</Project>
+      <Name>CustomBfHandler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GiftCardPaymentProvider\GiftCardPaymentProvider.csproj">
       <Project>{2dbd4aa6-496c-40a9-856d-c537ed5a509c}</Project>
       <Name>GiftCardPaymentProvider</Name>

@@ -94,12 +94,9 @@ namespace CommerceTraining.Controllers
                 if (itemVar.RequireSpecialShipping)
                 {
                     IShipment specialShip = _orderGroupFactory.CreateShipment(cart);
-                    //specialShip.ShippingMethodId = GetShipMethodByParam(itemCode);
-                    specialShip.ShippingMethodId = GetSipMethodByOptionParam(itemCode);
+                    specialShip.ShippingMethodId = GetShipMethodByParam(itemCode);
                     specialShip.ShippingAddress = GetOrderAddress(cart);
-
                     cart.AddShipment(specialShip);
-                    
                     cart.AddLineItem(specialShip, lineItem);
                 }
                 else
